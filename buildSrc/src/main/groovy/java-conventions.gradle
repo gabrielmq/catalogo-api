@@ -15,6 +15,11 @@ dependencies {
     implementation('org.yaml:snakeyaml:2.2') {
         version { strictly("2.2")}
     }
+
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.10.2'
+    testImplementation 'org.mockito:mockito-junit-jupiter:5.12.0'
+
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.10.2'
 }
 
 tasks.named("test") {
@@ -41,5 +46,5 @@ task e2eTests(type: Test, group: "verification") {
 }
 
 jacoco {
-    toolVersion = "0.8.8"
+    toolVersion = "0.8.12"
 }
