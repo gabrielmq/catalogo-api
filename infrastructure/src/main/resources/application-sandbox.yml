@@ -1,0 +1,10 @@
+server:
+  port: 8080
+  undertow:
+    threads:
+      worker: 10
+      io: 2
+
+keycloak:
+  realm: ${KEYCLOAK_REALM}
+  host: ${KEYCLOAK_HOST}

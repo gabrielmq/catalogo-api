@@ -1,0 +1,6 @@
+rootProject.name = 'catalogo-api'
+
+include 'domain'
+include 'application'
+include 'infrastructure'
+

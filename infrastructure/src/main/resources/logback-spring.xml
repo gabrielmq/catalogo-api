@@ -1,0 +1,11 @@
+<configuration>
+    <appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
+        <Target>SYSTEM_OUT</Target>
+        <encoder class="net.logstash.logback.encoder.LogstashEncoder">
+            <version>${version:-1}</version>
+        </encoder>
+    </appender>
+    <root level="INFO">
+        <appender-ref ref="stdout"/>
+    </root>
+</configuration>

@@ -1,0 +1,34 @@
+server:
+  port: 8080
+  shutdown: graceful
+  servlet:
+    context-path: /api
+  compression:
+    enabled: true
+    mime-types: text/html,text/xml,text/plain,text/css,text/javascript,application/javascript,application/json # Comma-separated list of MIME types that should be compressed.
+    min-response-size: 1024
+  undertow:
+    threads:
+      worker: 64
+      io: 4
+
+spring:
+  main:
+    banner-mode: off
+  lifecycle:
+    timeout-per-shutdown-phase: 10s
+  servlet:
+    multipart:
+      max-file-size: 10GB
+      max-request-size: 100GB
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: ${keycloak.host}/realms/${keycloak.realm}/protocol/openid-connect/certs
+          issuer-uri: ${keycloak.host}/realms/${keycloak.realm}
+
+logging:
+  level:
+    ROOT: info
+    io.github.gabrielmsouza.catalogo: DEBUG

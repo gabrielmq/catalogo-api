@@ -1,0 +1,7 @@
+keycloak:
+  realm: test
+  host: http://test:8443
+
+logging:
+  level:
+    ROOT: info

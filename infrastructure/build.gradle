@@ -1,0 +1,70 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+}
+
+plugins {
+    id 'java-conventions'
+    id 'application'
+    id 'jacoco-report-aggregation'
+    id 'org.springframework.boot' version '3.3.1'
+    id 'io.spring.dependency-management' version '1.1.5'
+    id 'org.flywaydb.flyway' version '9.11.0'
+}
+
+group 'com.fullcycle.catalogo.infrastructure'
+
+bootJar {
+    archiveFileName.set("application.jar")
+    destinationDirectory.set(file("${rootProject.buildDir}/libs"))
+}
+
+dependencies {
+    implementation(project(":domain"))
+    implementation(project(":application"))
+
+    implementation('ch.qos.logback:logback-classic:1.4.12')
+    implementation('net.logstash.logback:logstash-logback-encoder:7.0.1')
+
+    implementation("com.fasterxml.jackson.module:jackson-module-blackbird")
+
+    implementation('com.google.guava:guava:33.2.1-jre')
+
+    implementation('org.springframework.boot:spring-boot-starter-web') {
+        exclude module: 'spring-boot-starter-tomcat'
+    }
+    implementation('org.springframework.boot:spring-boot-starter-undertow')
+    implementation('org.springframework.boot:spring-boot-starter-security')
+    implementation('org.springframework.boot:spring-boot-starter-oauth2-resource-server')
+
+    implementation('org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0') {
+        exclude group: 'org.springdoc', module: 'springdoc-openapi-ui'
+    }
+
+    testImplementation(project(path: ':domain', configuration: 'testClasses'))
+
+    testImplementation('org.springframework.boot:spring-boot-starter-test')
+    testImplementation('org.springframework.security:spring-security-test')
+
+    testImplementation('org.testcontainers:testcontainers:1.19.8')
+    testImplementation('org.testcontainers:junit-jupiter:1.19.8')
+}
+
+testCodeCoverageReport {
+    reports {
+        xml {
+            enabled true
+            destination file("$rootDir/build/reports/jacooco/test/jacocoTestResport.xml")
+        }
+
+        html {
+            enabled true
+            destination file("$rootDir/build/reports/jacooco/test/")
+        }
+    }
+}
+
+tasks.named("jacocoTestReport") {
+    dependsOn tasks.named("testCodeCoverageReport", JacocoReport)
+}
