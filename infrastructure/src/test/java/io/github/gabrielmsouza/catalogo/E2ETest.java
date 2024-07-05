@@ -20,7 +20,6 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Retention(RUNTIME)
 @AutoConfigureMockMvc
 @ActiveProfiles("test-e2e")
-@ExtendWith(MySQLCleanUpExtension.class)
 @SpringBootTest(classes = WebServerConfiguration.class)
 public @interface E2ETest {
 }

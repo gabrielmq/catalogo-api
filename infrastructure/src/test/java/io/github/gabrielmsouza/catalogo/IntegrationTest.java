@@ -13,7 +13,6 @@ import java.lang.annotation.*;
 @ActiveProfiles("test-integration")
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-@ExtendWith(MySQLCleanUpExtension.class)
 @SpringBootTest(classes = WebServerConfiguration.class)
 public @interface IntegrationTest {
 }
