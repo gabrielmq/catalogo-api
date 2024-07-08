@@ -1,7 +1,12 @@
 package io.github.gabrielmsouza.catalogo.domain;
 
 
+import io.github.gabrielmsouza.catalogo.domain.category.Category;
+import io.github.gabrielmsouza.catalogo.domain.utils.IDUtils;
+import io.github.gabrielmsouza.catalogo.domain.utils.InstantUtils;
 import net.datafaker.Faker;
+
+import java.util.UUID;
 
 public final class Fixture {
     private static final Faker FAKER = new Faker();
@@ -30,5 +35,31 @@ public final class Fixture {
 
     public static String checksum() {
         return "03fe62de";
+    }
+
+    public static final class Categories {
+        public static Category aulas() {
+            return Category.with(
+                    IDUtils.uuid(),
+                    "Aulas",
+                    "Conteudo gravado",
+                    true,
+                    InstantUtils.now(),
+                    InstantUtils.now(),
+                    null
+            );
+        }
+
+        public static Category lives() {
+            return Category.with(
+                    IDUtils.uuid(),
+                    "Lives",
+                    "Conteudo ao vivo",
+                    true,
+                    InstantUtils.now(),
+                    InstantUtils.now(),
+                    null
+            );
+        }
     }
 }

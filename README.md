@@ -1,2 +1,2 @@
-# Gerenciador de catalogo de videos
+# API do catalogo de videos
 
