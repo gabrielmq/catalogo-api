@@ -1,3 +1,8 @@
 keycloak:
   realm: ${KEYCLOAK_REALM}
   host: ${KEYCLOAK_HOST}
+
+elasticsearch:
+  uris: ${ELASTICSEARCH_URIS}
+  username: ${ELASTICSEARCH_USERNAME}
+  password: ${ELASTICSEARCH_PASSWORD}

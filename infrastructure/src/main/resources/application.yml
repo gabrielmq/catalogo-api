@@ -1,6 +1,9 @@
 graphql:
   graphiql:
     enabled: false
+elasticsearch:
+  socket-timeout: 1_000
+  connect-timeout: 250
 
 server:
   port: 8080
@@ -34,6 +37,12 @@ spring:
   graphql:
     graphiql:
       enabled: ${graphql.graphiql.enabled}
+  elasticsearch:
+    uris: ${elasticsearch.uris}
+    username: ${elasticsearch.username}
+    password: ${elasticsearch.password}
+    connection-timeout: ${elasticsearch.connect-timeout}
+    socket-timeout: ${elasticsearch.socket-timeout}
 
 logging:
   level:
