@@ -1,3 +1,7 @@
+elasticsearch:
+  socket-timeout: 1_000
+  connect-timeout: 250
+
 server:
   port: 8080
   shutdown: graceful
@@ -27,6 +31,12 @@ spring:
         jwt:
           jwk-set-uri: ${keycloak.host}/realms/${keycloak.realm}/protocol/openid-connect/certs
           issuer-uri: ${keycloak.host}/realms/${keycloak.realm}
+  elasticsearch:
+    uris: ${elasticsearch.uris}
+    username: ${elasticsearch.username}
+    password: ${elasticsearch.password}
+    connection-timeout: ${elasticsearch.connect-timeout}
+    socket-timeout: ${elasticsearch.socket-timeout}
 
 logging:
   level:
