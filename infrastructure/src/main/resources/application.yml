@@ -1,3 +1,7 @@
+graphql:
+  graphiql:
+    enabled: false
+
 server:
   port: 8080
   shutdown: graceful
@@ -27,6 +31,9 @@ spring:
         jwt:
           jwk-set-uri: ${keycloak.host}/realms/${keycloak.realm}/protocol/openid-connect/certs
           issuer-uri: ${keycloak.host}/realms/${keycloak.realm}
+  graphql:
+    graphiql:
+      enabled: ${graphql.graphiql.enabled}
 
 logging:
   level:

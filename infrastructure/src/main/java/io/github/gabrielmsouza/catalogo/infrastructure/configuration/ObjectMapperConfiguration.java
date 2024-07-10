@@ -2,10 +2,11 @@ package io.github.gabrielmsouza.catalogo.infrastructure.configuration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.gabrielmsouza.catalogo.infrastructure.configuration.json.Json;
+import org.springframework.boot.jackson.JsonComponent;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-@Configuration(proxyBeanMethods = false)
+@JsonComponent
 public class ObjectMapperConfiguration {
 
     @Bean

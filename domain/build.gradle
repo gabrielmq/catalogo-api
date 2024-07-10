@@ -3,7 +3,7 @@ plugins {
     id 'java-conventions'
 }
 
-group 'com.fullcycle.catalogo.domain'
+group 'io.github.gabrielmsouza.catalogo.domain'
 
 dependencies {
     testImplementation("net.datafaker:datafaker:2.3.0")

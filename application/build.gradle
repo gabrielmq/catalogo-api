@@ -3,7 +3,7 @@ plugins {
     id 'java-conventions'
 }
 
-group 'com.fullcycle.catalogo.application'
+group 'io.github.gabrielmsouza.catalogo.domain'
 
 dependencies {
     implementation(project(":domain"))

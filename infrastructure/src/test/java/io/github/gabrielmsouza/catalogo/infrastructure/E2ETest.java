@@ -1,4 +1,4 @@
-package io.github.gabrielmsouza.catalogo;
+package io.github.gabrielmsouza.catalogo.infrastructure;
 
 import io.github.gabrielmsouza.catalogo.infrastructure.configuration.WebServerConfiguration;
 import org.junit.jupiter.api.Tag;
