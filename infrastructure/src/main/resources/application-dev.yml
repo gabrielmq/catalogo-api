@@ -1,10 +1,13 @@
 graphql:
   graphiql:
     enabled: true
+
 elasticsearch:
   uris: http://localhost:9200
   username: elastic
   password: elastic
+  socket-timeout: 60_000
+  connect-timeout: 5_000
 
 spring:
   autoconfigure:

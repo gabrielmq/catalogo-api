@@ -13,3 +13,5 @@ elasticsearch:
   uris: ${ELASTICSEARCH_URIS:http://localhost:9200}
   username: ${ELASTICSEARCH_USERNAME:elastic}
   password: ${ELASTICSEARCH_PASSWORD:elastic}
+  socket-timeout: 60_000
+  connect-timeout: 5_000
