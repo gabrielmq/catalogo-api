@@ -1,6 +1,6 @@
 package io.github.gabrielmsouza.catalogo.infrastructure.graphql;
 
-import io.github.gabrielmsouza.catalogo.infrastructure.GraphQLControllerTest;
+import io.github.gabrielmsouza.catalogo.GraphQLControllerTest;
 import io.github.gabrielmsouza.catalogo.application.category.list.ListCategoryUseCase;
 import io.github.gabrielmsouza.catalogo.application.category.save.SaveCategoryUseCase;
 import io.github.gabrielmsouza.catalogo.domain.Fixture;

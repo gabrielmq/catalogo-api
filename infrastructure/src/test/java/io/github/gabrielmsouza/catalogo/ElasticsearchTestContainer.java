@@ -31,6 +31,7 @@ public interface ElasticsearchTestContainer {
             final var env = this.getEnvMap();
             env.put("ES_JAVA_OPTS", "-Xms512m -Xmx512m");
             env.put("cluster.name", CLUSTER_NAME);
+            env.put("discovery.type", "single-node");
         }
 
         private static HttpWaitStrategy httpWaitStrategy() {

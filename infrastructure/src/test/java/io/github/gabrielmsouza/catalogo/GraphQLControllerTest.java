@@ -1,4 +1,4 @@
-package io.github.gabrielmsouza.catalogo.infrastructure;
+package io.github.gabrielmsouza.catalogo;
 
 import io.github.gabrielmsouza.catalogo.infrastructure.configuration.ObjectMapperConfiguration;
 import org.junit.jupiter.api.Tag;
