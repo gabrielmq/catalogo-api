@@ -6,7 +6,7 @@ services:
     container_name: elk_es01
     restart: on-failure
     volumes:
-      - es01:/usr/share/elasticsearch/data
+      - catalogo_es01:/usr/share/elasticsearch/data
     environment:
       - "discovery.type=single-node"
       - "bootstrap.memory_lock=true"
@@ -17,7 +17,7 @@ services:
       - "9200:9200"
       - "9300:9300"
     networks:
-      - elastic
+      - catalogo_elastic
 
   kibana:
     image: docker.elastic.co/kibana/kibana:7.17.9
@@ -30,7 +30,7 @@ services:
     depends_on:
       - elasticsearch
     networks:
-      - elastic
+      - catalogo_elastic
 
   logstash:
     image: docker.elastic.co/logstash/logstash:7.17.9
@@ -44,12 +44,12 @@ services:
     environment:
       LS_JAVA_OPTS: "-Xmx256m -Xms256m"
     networks:
-      - elastic
+      - catalogo_elastic
 
 networks:
-  elastic:
+  catalogo_elastic:
     external: true
 
 volumes:
-  es01:
+  catalogo_es01:
     external: true
