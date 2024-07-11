@@ -9,6 +9,9 @@ elasticsearch:
   socket-timeout: 60_000
   connect-timeout: 5_000
 
+kafka:
+  bootstrap-servers: localhost:9092
+
 logging:
   level:
     ROOT: info

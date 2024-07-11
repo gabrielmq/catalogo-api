@@ -9,9 +9,14 @@ elasticsearch:
   socket-timeout: 60_000
   connect-timeout: 5_000
 
+kafka:
+  bootstrap-servers: localhost:9092
+  pool-timeout: 60_000
+
 spring:
   autoconfigure:
     exclude:
       - org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
       - org.springframework.boot.autoconfigure.security.oauth2.resource.servlet.OAuth2ResourceServerAutoConfiguration
       - org.springframework.boot.autoconfigure.data.elasticsearch.ElasticsearchRepositoriesAutoConfiguration
+      - org.springframework.boot.autoconfigure.kafka.KafkaAutoConfiguration

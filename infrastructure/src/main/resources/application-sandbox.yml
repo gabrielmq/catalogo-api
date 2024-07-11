@@ -15,3 +15,7 @@ elasticsearch:
   password: ${ELASTICSEARCH_PASSWORD:elastic}
   socket-timeout: 60_000
   connect-timeout: 5_000
+
+kafka:
+  bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
+  pool-timeout: 60_000

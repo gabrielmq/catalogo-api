@@ -8,3 +8,7 @@ elasticsearch:
   password: elastic
   socket-timeout: 60_000
   connect-timeout: 5_000
+
+kafka:
+  bootstrap-servers: localhost:9092
+  pool-timeout: 60_000
