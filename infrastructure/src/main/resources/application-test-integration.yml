@@ -12,3 +12,28 @@ elasticsearch:
 kafka:
   bootstrap-servers: localhost:9092
   pool-timeout: 60_000
+
+rest-client:
+  base-url: "http://localhost:${wiremock.server.port}"
+  categories:
+    read-timeout: 1000
+
+resilience4j.bulkhead:
+  configs:
+    default:
+      maxConcurrentCalls: 1
+
+resilience4j.circuitbreaker:
+  configs:
+    default:
+      minimumNumberOfCalls: 3
+      permittedNumberOfCallsInHalfOpenState: 1
+      failureRateThreshold: 50
+      slowCallRateThreshold: 50
+      slowCallDurationThreshold: 300
+
+resilience4j.retry:
+  configs:
+    default:
+      maxAttempts: 2
+      waitDuration: 100

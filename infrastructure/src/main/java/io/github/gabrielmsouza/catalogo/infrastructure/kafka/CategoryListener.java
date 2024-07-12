@@ -3,7 +3,7 @@ package io.github.gabrielmsouza.catalogo.infrastructure.kafka;
 import com.fasterxml.jackson.core.type.TypeReference;
 import io.github.gabrielmsouza.catalogo.application.category.delete.DeleteCategoryUseCase;
 import io.github.gabrielmsouza.catalogo.application.category.save.SaveCategoryUseCase;
-import io.github.gabrielmsouza.catalogo.infrastructure.category.CategoryGateway;
+import io.github.gabrielmsouza.catalogo.infrastructure.category.CategoryClient;
 import io.github.gabrielmsouza.catalogo.infrastructure.category.models.CategoryEvent;
 import io.github.gabrielmsouza.catalogo.infrastructure.configuration.json.Json;
 import io.github.gabrielmsouza.catalogo.infrastructure.kafka.models.connect.MessageValue;
@@ -29,16 +29,16 @@ public class CategoryListener {
 
     private final SaveCategoryUseCase saveCategoryUseCase;
     private final DeleteCategoryUseCase deleteCategoryUseCase;
-    private final CategoryGateway categoryGateway;
+    private final CategoryClient categoryClient;
 
     public CategoryListener(
             final SaveCategoryUseCase saveCategoryUseCase,
             final DeleteCategoryUseCase deleteCategoryUseCase,
-            final CategoryGateway categoryGateway
+            final CategoryClient categoryClient
     ) {
         this.saveCategoryUseCase = Objects.requireNonNull(saveCategoryUseCase);
         this.deleteCategoryUseCase = Objects.requireNonNull(deleteCategoryUseCase);
-        this.categoryGateway = Objects.requireNonNull(categoryGateway);
+        this.categoryClient = Objects.requireNonNull(categoryClient);
     }
 
     @KafkaListener(
@@ -70,7 +70,7 @@ public class CategoryListener {
             return;
         }
 
-        this.categoryGateway.categoryOfId(message.after().id())
+        this.categoryClient.categoryOfId(message.after().id())
                 .ifPresentOrElse(
                         this.saveCategoryUseCase::execute,
                         () -> LOG.warn("Category was not found {}", message.after().id())
@@ -87,7 +87,7 @@ public class CategoryListener {
             return;
         }
 
-        this.categoryGateway.categoryOfId(message.after().id())
+        this.categoryClient.categoryOfId(message.after().id())
                 .ifPresentOrElse(
                         this.saveCategoryUseCase::execute,
                         () -> LOG.warn("Category was not found {}", message.after().id())

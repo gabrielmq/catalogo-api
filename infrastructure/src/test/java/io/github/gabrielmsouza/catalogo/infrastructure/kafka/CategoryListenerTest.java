@@ -4,7 +4,7 @@ import io.github.gabrielmsouza.catalogo.AbstractEmbeddedKafkaTest;
 import io.github.gabrielmsouza.catalogo.application.category.delete.DeleteCategoryUseCase;
 import io.github.gabrielmsouza.catalogo.application.category.save.SaveCategoryUseCase;
 import io.github.gabrielmsouza.catalogo.domain.Fixture;
-import io.github.gabrielmsouza.catalogo.infrastructure.category.CategoryGateway;
+import io.github.gabrielmsouza.catalogo.infrastructure.category.CategoryClient;
 import io.github.gabrielmsouza.catalogo.infrastructure.category.models.CategoryEvent;
 import io.github.gabrielmsouza.catalogo.infrastructure.configuration.json.Json;
 import io.github.gabrielmsouza.catalogo.infrastructure.kafka.models.connect.MessageValue;
@@ -12,11 +12,9 @@ import io.github.gabrielmsouza.catalogo.infrastructure.kafka.models.connect.Oper
 import io.github.gabrielmsouza.catalogo.infrastructure.kafka.models.connect.ValuePayload;
 import org.apache.kafka.clients.admin.TopicListing;
 import org.apache.kafka.clients.producer.ProducerRecord;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
@@ -40,7 +38,7 @@ public class CategoryListenerTest extends AbstractEmbeddedKafkaTest {
     private SaveCategoryUseCase saveCategoryUseCase;
 
     @MockBean
-    private CategoryGateway categoryClient;
+    private CategoryClient categoryClient;
 
     @SpyBean
     private CategoryListener categoryListener;

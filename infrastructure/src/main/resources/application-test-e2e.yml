@@ -12,6 +12,31 @@ elasticsearch:
 kafka:
   bootstrap-servers: localhost:9092
 
+rest-client:
+  base-url: http://localhost:8080
+  categories:
+    read-timeout: 60000
+
+resilience4j.bulkhead:
+  configs:
+    default:
+      maxConcurrentCalls: 1
+
+resilience4j.circuitbreaker:
+  configs:
+    default:
+      minimumNumberOfCalls: 2
+      permittedNumberOfCallsInHalfOpenState: 1
+      failureRateThreshold: 50
+      slowCallRateThreshold: 50
+      slowCallDurationThreshold: 300
+
+resilience4j.retry:
+  configs:
+    default:
+      maxAttempts: 2
+      waitDuration: 100
+
 logging:
   level:
     ROOT: info

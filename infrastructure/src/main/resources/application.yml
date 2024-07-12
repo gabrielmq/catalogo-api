@@ -18,6 +18,10 @@ kafka:
       group-id: catalogo-service
       max-attempts: 4
 
+rest-client:
+  categories:
+    base-url: "${rest-client.base-url}/api/categories"
+
 server:
   port: 8080
   shutdown: graceful
@@ -58,6 +62,62 @@ spring:
     socket-timeout: ${elasticsearch.socket-timeout}
   kafka:
     bootstrap-servers: ${kafka.bootstrap-servers}
+
+resilience4j.bulkhead:
+  configs:
+    default:
+      maxConcurrentCalls: 25 # Maximum number of concurrent request
+      maxWaitDuration: 100 # Maximum time to wait for a request to be executed
+  instances:
+    categories:
+      baseConfig: default
+
+resilience4j.circuitbreaker:
+  configs:
+    default:
+      registerHealthIndicator: true # Register a health indicator in Spring Boot
+      slidingWindowType: COUNT_BASED # Count the number of requests
+      slidingWindowSize: 100 # Number of requests when circuit breaker is closed. Verify if failure, successes and slow requests
+      minimumNumberOfCalls: 20 # Minimum number of request to identify, if they are healthy or not to consider to open circuit breaker
+      permittedNumberOfCallsInHalfOpenState: 10 # Number of requests allowed in the half-open state
+      waitDurationInOpenState: 30s # Time to maintain the circuit breaker in open state
+      failureRateThreshold: 50 # Percentage of failed requests to open the circuit breaker
+      slowCallRateThreshold: 70  # Percentage of slow requests to open the circuit breaker
+      slowCallDurationThreshold: 2_000 # Duration of a slow requests in milliseconds
+      recordExceptions: # List of exceptions that should be recorded
+        - io.github.gabrielmsouza.catalogo.domain.exceptions.InternalErrorException
+        - org.springframework.web.client.ResourceAccessException
+        - org.springframework.web.client.HttpServerErrorException.InternalServerError
+        - org.springframework.web.client.HttpServerErrorException.GatewayTimeout
+        - org.springframework.web.client.HttpServerErrorException.ServiceUnavailable
+        - java.net.SocketTimeoutException
+        - java.net.http.HttpConnectTimeoutException
+        - java.net.http.HttpTimeoutException
+        - java.util.concurrent.TimeoutException
+        - java.io.IOException
+  instances:
+    categories:
+      baseConfig: default
+
+resilience4j.retry:
+  configs:
+    default:
+      maxAttempts: 3 # Number of retry attempts
+      waitDuration: 250 # Time to wait before retrying
+      retryExceptions: # List of exceptions that should be retried
+        - io.github.gabrielmsouza.catalogo.domain.exceptions.InternalErrorException
+        - org.springframework.web.client.ResourceAccessException
+        - org.springframework.web.client.HttpServerErrorException.InternalServerError
+        - org.springframework.web.client.HttpServerErrorException.GatewayTimeout
+        - org.springframework.web.client.HttpServerErrorException.ServiceUnavailable
+        - java.net.SocketTimeoutException
+        - java.net.http.HttpConnectTimeoutException
+        - java.net.http.HttpTimeoutException
+        - java.util.concurrent.TimeoutException
+        - java.io.IOException
+  instances:
+    categories:
+      baseConfig: default
 
 logging:
   level:

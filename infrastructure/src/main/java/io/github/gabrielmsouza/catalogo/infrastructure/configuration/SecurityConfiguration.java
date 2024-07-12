@@ -108,7 +108,7 @@ public class SecurityConfiguration {
                             .toList();
 
             return Optional.ofNullable(jwt.getClaimAsMap(RESOURCE_ACCESS))
-                    .map(resources -> resources.entrySet())
+                    .map(Map::entrySet)
                     .map(mapResources)
                     .orElse(Collections.emptyList())
                     .stream();

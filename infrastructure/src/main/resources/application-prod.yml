@@ -9,3 +9,6 @@ elasticsearch:
 
 kafka:
   bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS}
+
+rest-client:
+  base-url: ${REST_CLIENT_BASE_URL}
