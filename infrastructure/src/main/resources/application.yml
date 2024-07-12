@@ -1,3 +1,9 @@
+cache:
+  type: cache2k
+  names: admin-categories
+  max-entries: 200
+  ttl: 60 # seconds
+
 graphql:
   graphiql:
     enabled: false
@@ -62,6 +68,9 @@ spring:
     socket-timeout: ${elasticsearch.socket-timeout}
   kafka:
     bootstrap-servers: ${kafka.bootstrap-servers}
+  cache:
+    type: ${cache.type}
+    cache-names: ${cache.names}
 
 resilience4j.bulkhead:
   configs:

@@ -62,6 +62,49 @@ class CategoryRestClientTest extends AbstractRestClientTest {
     }
 
     @Test
+    void givenACategory_whenReceiveTwoCalls_thenShouldReturnCachedValue() {
+        // given
+        final var aulas = Fixture.Categories.aulas();
+        final var response = new CategoryDTO(
+                aulas.id(),
+                aulas.name(),
+                aulas.description(),
+                aulas.active(),
+                aulas.createdAt(),
+                aulas.updatedAt(),
+                aulas.deletedAt()
+        );
+
+        stubFor(
+                get(urlPathEqualTo("/api/categories/%s".formatted(aulas.id())))
+                        .willReturn(
+                                aResponse()
+                                        .withStatus(200)
+                                        .withHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                                        .withBody(Json.writeValueAsString(response))
+                        )
+        );
+
+        // when
+        this.restClient.categoryOfId(aulas.id()).get();
+        final var actualCategory = this.restClient.categoryOfId(aulas.id()).get();
+
+        // then
+        assertEquals(aulas.id(), actualCategory.id());
+        assertEquals(aulas.name(), actualCategory.name());
+        assertEquals(aulas.description(), actualCategory.description());
+        assertEquals(aulas.active(), actualCategory.active());
+        assertEquals(aulas.createdAt(), actualCategory.createdAt());
+        assertEquals(aulas.updatedAt(), actualCategory.updatedAt());
+        assertEquals(aulas.deletedAt(), actualCategory.deletedAt());
+
+        final var actualCachedValue = cache("admin-categories").get(aulas.id());
+        assertEquals(actualCategory, actualCachedValue.get());
+
+        verify(1, getRequestedFor(urlPathEqualTo("/api/categories/%s".formatted(aulas.id()))));
+    }
+
+    @Test
     void givenACategory_whenReceive404FromServer_thenShouldReturnInternalError() {
         // given
         final var expectedId = "123";
@@ -150,7 +193,7 @@ class CategoryRestClientTest extends AbstractRestClientTest {
     void givenACategory_whenBulkheadIsFull_thenShouldReturnError() {
         // given
         final var expectedErrorMessage = "Bulkhead 'categories' is full and does not permit further calls";
-        acquireBulkheadPermission(CategoryRestClient.CATEGORY);
+        acquireBulkheadPermission(CategoryRestClient.NAMESPACE);
 
         // when
         final var actualException =
@@ -159,13 +202,13 @@ class CategoryRestClientTest extends AbstractRestClientTest {
         // then
         assertEquals(expectedErrorMessage, actualException.getMessage());
 
-        releaseBulkheadPermission(CategoryRestClient.CATEGORY);
+        releaseBulkheadPermission(CategoryRestClient.NAMESPACE);
     }
 
     @Test
     public void givenCall_whenCBIsOpen_shouldReturnError() {
         // given
-        transitionToOpenState(CategoryRestClient.CATEGORY);
+        transitionToOpenState(CategoryRestClient.NAMESPACE);
         final var expectedId = "123";
         final var expectedErrorMessage = "CircuitBreaker 'categories' is OPEN and does not permit further calls";
 
@@ -173,7 +216,7 @@ class CategoryRestClientTest extends AbstractRestClientTest {
         final var actualException = assertThrows(CallNotPermittedException.class, () -> this.restClient.categoryOfId(expectedId));
 
         // then
-        checkCircuitBreakerState(CategoryRestClient.CATEGORY, CircuitBreaker.State.OPEN);
+        checkCircuitBreakerState(CategoryRestClient.NAMESPACE, CircuitBreaker.State.OPEN);
         assertEquals(expectedErrorMessage, actualException.getMessage());
 
         verify(0, getRequestedFor(urlPathEqualTo("/api/categories/%s".formatted(expectedId))));
@@ -200,7 +243,7 @@ class CategoryRestClientTest extends AbstractRestClientTest {
         final var actualException = assertThrows(CallNotPermittedException.class, () -> this.restClient.categoryOfId(expectedId));
 
         // then
-        checkCircuitBreakerState(CategoryRestClient.CATEGORY, CircuitBreaker.State.OPEN);
+        checkCircuitBreakerState(CategoryRestClient.NAMESPACE, CircuitBreaker.State.OPEN);
         assertEquals(expectedErrorMessage, actualException.getMessage());
 
         verify(3, getRequestedFor(urlPathEqualTo("/api/categories/%s".formatted(expectedId))));

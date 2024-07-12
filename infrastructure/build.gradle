@@ -19,6 +19,10 @@ bootJar {
     destinationDirectory.set(file("${rootProject.buildDir}/libs"))
 }
 
+ext {
+    cache2k = "2.6.1.Final"
+}
+
 dependencies {
     implementation(project(":domain"))
     implementation(project(":application"))
@@ -35,7 +39,12 @@ dependencies {
     implementation("io.github.resilience4j:resilience4j-circuitbreaker")
     implementation("io.github.resilience4j:resilience4j-retry")
 
+    implementation("org.cache2k:cache2k-api:$cache2k")
+    implementation("org.cache2k:cache2k-spring:$cache2k")
+    runtimeOnly("org.cache2k:cache2k-core:$cache2k")
+
     implementation("org.springframework.boot:spring-boot-starter-aop")
+    implementation("org.springframework.boot:spring-boot-starter-cache")
     implementation('org.springframework.boot:spring-boot-starter-web') {
         exclude module: 'spring-boot-starter-tomcat'
     }
