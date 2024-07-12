@@ -25,7 +25,7 @@ import java.util.stream.Stream;
 
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
-@Profile("!dev")
+@Profile("!dev & !sandbox")
 @EnableWebSecurity
 @Configuration(proxyBeanMethods = false)
 @EnableMethodSecurity(securedEnabled = true, jsr250Enabled = true)
@@ -108,7 +108,7 @@ public class SecurityConfiguration {
                             .toList();
 
             return Optional.ofNullable(jwt.getClaimAsMap(RESOURCE_ACCESS))
-                    .map(resources -> resources.entrySet())
+                    .map(Map::entrySet)
                     .map(mapResources)
                     .orElse(Collections.emptyList())
                     .stream();

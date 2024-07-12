@@ -1,11 +1,9 @@
 package io.github.gabrielmsouza.catalogo;
 
-import io.github.gabrielmsouza.catalogo.infrastructure.configuration.WebServerConfiguration;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.elasticsearch.DataElasticsearchTest;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.testcontainers.context.ImportTestcontainers;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
@@ -20,10 +18,6 @@ import java.util.Collection;
 @Tag("integrationTest")
 @ActiveProfiles("test-integration")
 @ImportTestcontainers(ElasticsearchTestContainer.class)
-@SpringBootTest(classes = {
-        WebServerConfiguration.class,
-        IntegrationTestConfiguration.class
-})
 @ComponentScan(
         basePackages = "io.github.gabrielmsouza.catalogo",
         useDefaultFilters = false,

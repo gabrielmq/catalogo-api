@@ -9,4 +9,8 @@ public class InternalErrorException extends NoStacktraceException {
     public static InternalErrorException with(final String message, final Throwable cause) {
         return new InternalErrorException(message, cause);
     }
+
+    public static InternalErrorException with(final String message) {
+        return new InternalErrorException(message, null);
+    }
 }
