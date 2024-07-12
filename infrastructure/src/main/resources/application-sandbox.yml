@@ -6,8 +6,10 @@ server:
       io: 2
 
 keycloak:
-  realm: ${KEYCLOAK_REALM:catalogo}
-  host: ${KEYCLOAK_HOST:http://localhost:8443}
+  client-id: ${KEYCLOAK_CLIENT_ID}
+  client-secret: ${KEYCLOAK_CLIENT_SECRET}
+  host: ${KEYCLOAK_HOST:http://keycloak.internal:8443}
+  realm: ${KEYCLOAK_REALM:fc3-codeflix}
 
 elasticsearch:
   uris: ${ELASTICSEARCH_URIS:http://localhost:9200}
@@ -21,4 +23,8 @@ kafka:
   pool-timeout: 60_000
 
 rest-client:
-  base-url: ${REST_CLIENT_BASE_URL:http://localhost:8080}
+  base-url: ${BASE_URL:http://localhost:8080}
+  categories:
+    read-timeout: 1_000
+  keycloak:
+    read-timeout: 1_000

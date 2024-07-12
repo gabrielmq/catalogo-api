@@ -1,6 +1,8 @@
 keycloak:
-  realm: ${KEYCLOAK_REALM}
+  client-id: ${KEYCLOAK_CLIENT_ID}
+  client-secret: ${KEYCLOAK_CLIENT_SECRET}
   host: ${KEYCLOAK_HOST}
+  realm: ${KEYCLOAK_REALM}
 
 elasticsearch:
   uris: ${ELASTICSEARCH_URIS}
@@ -11,4 +13,8 @@ kafka:
   bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS}
 
 rest-client:
-  base-url: ${REST_CLIENT_BASE_URL}
+  base-url: ${BASE_URL}
+  categories:
+    read-timeout: 1_000
+  keycloak:
+    read-timeout: 1_000

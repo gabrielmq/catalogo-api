@@ -2,8 +2,11 @@ cache:
   type: simple
 
 keycloak:
+  client-id: fc3-app
+  client-secret: seecret
+  host: "http://localhost:${wiremock.server.port:8001}"
   realm: test
-  host: http://test:8443
+
 
 elasticsearch:
   uris: http://localhost:9200
@@ -18,7 +21,9 @@ kafka:
 rest-client:
   base-url: http://localhost:8080
   categories:
-    read-timeout: 60000
+    read-timeout: 1_000
+  keycloak:
+    read-timeout: 1_000
 
 resilience4j.bulkhead:
   configs:

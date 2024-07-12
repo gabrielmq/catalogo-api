@@ -27,6 +27,11 @@ kafka:
 rest-client:
   categories:
     base-url: "${rest-client.base-url}/api/categories"
+  keycloak:
+    base-url: "${keycloak.host}/realms/${keycloak.realm}"
+
+keycloak:
+  token-uri: /protocol/openid-connect/token
 
 server:
   port: 8080
