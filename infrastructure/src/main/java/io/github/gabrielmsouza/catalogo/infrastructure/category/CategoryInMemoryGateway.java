@@ -27,13 +27,13 @@ public class CategoryInMemoryGateway implements CategoryGateway {
     }
 
     @Override
-    public void deleteById(final String genreId) {
-        this.db.remove(genreId);
+    public void deleteById(final String anId) {
+        this.db.remove(anId);
     }
 
     @Override
-    public Optional<Category> findById(final String genreId) {
-        return Optional.ofNullable(this.db.get(genreId));
+    public Optional<Category> findById(final String anId) {
+        return Optional.ofNullable(this.db.get(anId));
     }
 
     @Override
