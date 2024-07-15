@@ -1,8 +1,8 @@
-package io.github.gabrielmsouza.catalogo.infrastructure.category;
+package io.github.gabrielmsouza.catalogo.infrastructure.castmember;
 
-import io.github.gabrielmsouza.catalogo.domain.category.Category;
-import io.github.gabrielmsouza.catalogo.domain.category.CategoryGateway;
-import io.github.gabrielmsouza.catalogo.domain.category.CategorySearchQuery;
+import io.github.gabrielmsouza.catalogo.domain.castmember.CastMember;
+import io.github.gabrielmsouza.catalogo.domain.castmember.CastMemberGateway;
+import io.github.gabrielmsouza.catalogo.domain.castmember.CastMemberSearchQuery;
 import io.github.gabrielmsouza.catalogo.domain.pagination.Pagination;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
@@ -13,17 +13,17 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @Component
 @Profile("dev")
-public class CategoryInMemoryGateway implements CategoryGateway {
-    private final Map<String, Category> db;
+public class CastMemberInMemoryGateway implements CastMemberGateway {
+    private final Map<String, CastMember> db;
 
-    public CategoryInMemoryGateway() {
+    public CastMemberInMemoryGateway() {
         this.db = new ConcurrentHashMap<>();
     }
 
     @Override
-    public Category save(final Category aCategory) {
-        this.db.put(aCategory.id(), aCategory);
-        return aCategory;
+    public CastMember save(final CastMember aCastMember) {
+        this.db.put(aCastMember.id(), aCastMember);
+        return aCastMember;
     }
 
     @Override
@@ -32,12 +32,12 @@ public class CategoryInMemoryGateway implements CategoryGateway {
     }
 
     @Override
-    public Optional<Category> findById(final String anId) {
+    public Optional<CastMember> findById(final String anId) {
         return Optional.ofNullable(this.db.get(anId));
     }
 
     @Override
-    public Pagination<Category> findAll(final CategorySearchQuery aQuery) {
+    public Pagination<CastMember> findAll(final CastMemberSearchQuery aQuery) {
         return new Pagination<>(
                 aQuery.page(),
                 aQuery.perPage(),

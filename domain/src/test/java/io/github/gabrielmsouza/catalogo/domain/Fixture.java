@@ -1,6 +1,8 @@
 package io.github.gabrielmsouza.catalogo.domain;
 
 
+import io.github.gabrielmsouza.catalogo.domain.castmember.CastMember;
+import io.github.gabrielmsouza.catalogo.domain.castmember.CastMemberType;
 import io.github.gabrielmsouza.catalogo.domain.category.Category;
 import io.github.gabrielmsouza.catalogo.domain.utils.IDUtils;
 import io.github.gabrielmsouza.catalogo.domain.utils.InstantUtils;
@@ -72,6 +74,37 @@ public final class Fixture {
                     InstantUtils.now(),
                     null
             );
+        }
+    }
+
+    public static final class CastMembers {
+
+        public static CastMemberType type() {
+            return FAKER.options().option(CastMemberType.values());
+        }
+
+        public static CastMember actor() {
+            return CastMember.with(UUID.randomUUID().toString(), Fixture.name(), CastMemberType.ACTOR, InstantUtils.now(),  InstantUtils.now());
+        }
+
+        public static CastMember actor(final String name) {
+            return CastMember.with(UUID.randomUUID().toString(), name, CastMemberType.ACTOR, InstantUtils.now(),  InstantUtils.now());
+        }
+
+        public static CastMember unknown() {
+            return CastMember.with(UUID.randomUUID().toString(), Fixture.name(), CastMemberType.UNKNOWN,  InstantUtils.now(),  InstantUtils.now());
+        }
+
+        public static CastMember unknown(final String name) {
+            return CastMember.with(UUID.randomUUID().toString(), name, CastMemberType.UNKNOWN,  InstantUtils.now(),  InstantUtils.now());
+        }
+
+        public static CastMember director() {
+            return CastMember.with(UUID.randomUUID().toString(), Fixture.name(), CastMemberType.DIRECTOR,  InstantUtils.now(),  InstantUtils.now());
+        }
+
+        public static CastMember director(final String name) {
+            return CastMember.with(UUID.randomUUID().toString(), name, CastMemberType.DIRECTOR,  InstantUtils.now(),  InstantUtils.now());
         }
     }
 }
