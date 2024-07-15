@@ -79,7 +79,7 @@ public class CategoryListenerTest extends AbstractEmbeddedKafkaTest {
         final var aulasEvent = new CategoryEvent(aulas.id());
 
         final var message =
-                Json.writeValueAsString(new MessageValue<>(new ValuePayload<>(aulasEvent, aulasEvent, aSource(), Operation.CREATE)));
+                Json.writeValueAsString(new MessageValue<>(new ValuePayload<>(aulasEvent, null, aSource(), Operation.CREATE)));
 
         final var latch = new CountDownLatch(1);
         doAnswer(t -> {
@@ -89,7 +89,7 @@ public class CategoryListenerTest extends AbstractEmbeddedKafkaTest {
         doReturn(Optional.of(aulas)).when(categoryClient).categoryOfId(any());
 
         // when
-        producer().send(new ProducerRecord<>(categoryTopic, message));
+        producer().send(new ProducerRecord<>(categoryTopic, message)).get(10, TimeUnit.SECONDS);
         producer().flush();
 
         assertTrue(latch.await(1, TimeUnit.MINUTES));
@@ -116,7 +116,7 @@ public class CategoryListenerTest extends AbstractEmbeddedKafkaTest {
         doReturn(Optional.of(aulas)).when(categoryClient).categoryOfId(any());
 
         // when
-        producer().send(new ProducerRecord<>(categoryTopic, message));
+        producer().send(new ProducerRecord<>(categoryTopic, message)).get(10, TimeUnit.SECONDS);
         producer().flush();
 
         assertTrue(latch.await(1, TimeUnit.MINUTES));
@@ -133,7 +133,7 @@ public class CategoryListenerTest extends AbstractEmbeddedKafkaTest {
         final var aulasEvent = new CategoryEvent(aulas.id());
 
         final var message =
-                Json.writeValueAsString(new MessageValue<>(new ValuePayload<>(aulasEvent, aulasEvent, aSource(), Operation.DELETE)));
+                Json.writeValueAsString(new MessageValue<>(new ValuePayload<>(null, aulasEvent, aSource(), Operation.DELETE)));
 
         final var latch = new CountDownLatch(1);
         doAnswer(t -> {
@@ -142,7 +142,7 @@ public class CategoryListenerTest extends AbstractEmbeddedKafkaTest {
         }).when(deleteCategoryUseCase).execute(any());
 
         // when
-        producer().send(new ProducerRecord<>(categoryTopic, message));
+        producer().send(new ProducerRecord<>(categoryTopic, message)).get(10, TimeUnit.SECONDS);
         producer().flush();
 
         assertTrue(latch.await(1, TimeUnit.MINUTES));
@@ -178,7 +178,7 @@ public class CategoryListenerTest extends AbstractEmbeddedKafkaTest {
         }).when(deleteCategoryUseCase).execute(any());
 
         // when
-        producer().send(new ProducerRecord<>(categoryTopic, message));
+        producer().send(new ProducerRecord<>(categoryTopic, message)).get(10, TimeUnit.SECONDS);
         producer().flush();
 
         assertTrue(latch.await(1, TimeUnit.MINUTES));
