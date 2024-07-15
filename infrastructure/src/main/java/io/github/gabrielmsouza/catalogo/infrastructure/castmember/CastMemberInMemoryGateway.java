@@ -4,6 +4,7 @@ import io.github.gabrielmsouza.catalogo.domain.castmember.CastMember;
 import io.github.gabrielmsouza.catalogo.domain.castmember.CastMemberGateway;
 import io.github.gabrielmsouza.catalogo.domain.castmember.CastMemberSearchQuery;
 import io.github.gabrielmsouza.catalogo.domain.pagination.Pagination;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
@@ -11,6 +12,7 @@ import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Component
+@Profile("dev")
 public class CastMemberInMemoryGateway implements CastMemberGateway {
     private final Map<String, CastMember> db;
 

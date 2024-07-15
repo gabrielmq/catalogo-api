@@ -87,12 +87,24 @@ public final class Fixture {
             return CastMember.with(UUID.randomUUID().toString(), Fixture.name(), CastMemberType.ACTOR, InstantUtils.now(),  InstantUtils.now());
         }
 
+        public static CastMember actor(final String name) {
+            return CastMember.with(UUID.randomUUID().toString(), name, CastMemberType.ACTOR, InstantUtils.now(),  InstantUtils.now());
+        }
+
         public static CastMember unknown() {
             return CastMember.with(UUID.randomUUID().toString(), Fixture.name(), CastMemberType.UNKNOWN,  InstantUtils.now(),  InstantUtils.now());
         }
 
+        public static CastMember unknown(final String name) {
+            return CastMember.with(UUID.randomUUID().toString(), name, CastMemberType.UNKNOWN,  InstantUtils.now(),  InstantUtils.now());
+        }
+
         public static CastMember director() {
             return CastMember.with(UUID.randomUUID().toString(), Fixture.name(), CastMemberType.DIRECTOR,  InstantUtils.now(),  InstantUtils.now());
+        }
+
+        public static CastMember director(final String name) {
+            return CastMember.with(UUID.randomUUID().toString(), name, CastMemberType.DIRECTOR,  InstantUtils.now(),  InstantUtils.now());
         }
     }
 }
