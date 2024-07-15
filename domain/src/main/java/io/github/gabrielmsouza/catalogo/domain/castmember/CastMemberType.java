@@ -12,6 +12,8 @@ public enum CastMemberType {
             Stream.of(values()).collect(Collectors.toMap(CastMemberType::name, Function.identity()));
 
     public static CastMemberType of(final String aType) {
-        return CAST_MEMBER_TYPES.getOrDefault(aType, UNKNOWN);
+        return aType != null
+                ? CAST_MEMBER_TYPES.getOrDefault(aType.toUpperCase(), UNKNOWN)
+                : UNKNOWN;
     }
 }
