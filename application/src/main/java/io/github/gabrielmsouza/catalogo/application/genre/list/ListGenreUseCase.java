@@ -6,6 +6,7 @@ import io.github.gabrielmsouza.catalogo.domain.genre.GenreGateway;
 import io.github.gabrielmsouza.catalogo.domain.genre.GenreSearchQuery;
 import io.github.gabrielmsouza.catalogo.domain.pagination.Pagination;
 
+import java.time.Instant;
 import java.util.Objects;
 import java.util.Set;
 
@@ -43,12 +44,20 @@ public class ListGenreUseCase extends UseCase<ListGenreUseCase.Input, Pagination
 
     public record Output(
             String id,
-            String name
+            String name,
+            boolean active,
+            Set<String> categories,
+            Instant createdAt,
+            Instant updatedAt
     ) {
         public static Output from(final Genre genre) {
             return new Output(
                     genre.id(),
-                    genre.name()
+                    genre.name(),
+                    genre.active(),
+                    genre.categories(),
+                    genre.createdAt(),
+                    genre.updatedAt()
             );
         }
     }
