@@ -1,6 +1,7 @@
 package io.github.gabrielmsouza.catalogo.infrastructure.job;
 
 import io.github.gabrielmsouza.catalogo.infrastructure.authentication.RefreshClientCredentials;
+import org.springframework.context.annotation.Profile;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -8,6 +9,7 @@ import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 @Component
+@Profile("!test-integration & !test-e2e")
 public class ClientCredentialsJob {
 
     private final RefreshClientCredentials clientCredentials;
