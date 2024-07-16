@@ -4,7 +4,7 @@ import io.github.gabrielmsouza.catalogo.application.category.list.ListCategoryUs
 import io.github.gabrielmsouza.catalogo.application.category.save.SaveCategoryUseCase;
 import io.github.gabrielmsouza.catalogo.domain.category.Category;
 import io.github.gabrielmsouza.catalogo.domain.category.CategorySearchQuery;
-import io.github.gabrielmsouza.catalogo.infrastructure.category.models.CategoryDTO;
+import io.github.gabrielmsouza.catalogo.infrastructure.category.models.CategoryGraphQLInput;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
@@ -39,7 +39,7 @@ public class CategoryGraphQLController {
     }
 
     @MutationMapping
-    public Category saveCategory(@Argument CategoryDTO input) {
+    public Category saveCategory(@Argument CategoryGraphQLInput input) {
         final var aCategory = input.toCategory();
         this.saveCategoryUseCase.execute(aCategory);
         return aCategory;

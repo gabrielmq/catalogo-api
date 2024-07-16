@@ -5,17 +5,17 @@ import io.github.gabrielmsouza.catalogo.domain.genre.Genre;
 import java.time.Instant;
 import java.util.Set;
 
-public record GenreDTO(
+public record GenreGraphQLInput(
         String id,
         String name,
-        Boolean isActive,
-        Set<String> categoriesId,
+        Boolean active,
+        Set<String> categories,
         Instant createdAt,
         Instant updatedAt,
         Instant deletedAt
 ) {
-    public static GenreDTO from(final Genre genre) {
-        return new GenreDTO(
+    public static GenreGraphQLInput from(final Genre genre) {
+        return new GenreGraphQLInput(
                 genre.id(),
                 genre.name(),
                 genre.active(),

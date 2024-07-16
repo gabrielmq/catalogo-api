@@ -1,6 +1,5 @@
 package io.github.gabrielmsouza.catalogo.infrastructure.authentication;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import io.github.gabrielmsouza.catalogo.domain.exceptions.InternalErrorException;
 import io.github.gabrielmsouza.catalogo.infrastructure.configuration.annontations.Keycloak;
 import io.github.gabrielmsouza.catalogo.infrastructure.configuration.properties.KeycloakProperties;
@@ -69,8 +68,8 @@ public class KeycloakAuthenticationGateway implements AuthenticationGateway {
     }
 
     public record KeycloakAuthenticationResult(
-            @JsonProperty("access_token") String accessToken,
-            @JsonProperty("refresh_token") String refreshToken
+            String accessToken,
+            String refreshToken
     ) {
     }
 }

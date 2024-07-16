@@ -62,8 +62,8 @@ class GenreRestClientTest extends AbstractRestClientTest {
         // then
         assertEquals(tech.id(), actualGenre.id());
         assertEquals(tech.name(), actualGenre.name());
-        assertEquals(tech.active(), actualGenre.active());
-        assertEquals(tech.categories(), actualGenre.categories());
+        assertEquals(tech.active(), actualGenre.isActive());
+        assertEquals(tech.categories(), actualGenre.categoriesId());
         assertEquals(tech.createdAt(), actualGenre.createdAt());
         assertEquals(tech.updatedAt(), actualGenre.updatedAt());
         assertEquals(tech.deletedAt(), actualGenre.deletedAt());
@@ -107,8 +107,8 @@ class GenreRestClientTest extends AbstractRestClientTest {
         // then
         assertEquals(business.id(), actualGenre.id());
         assertEquals(business.name(), actualGenre.name());
-        assertEquals(business.active(), actualGenre.active());
-        assertEquals(business.categories(), actualGenre.categories());
+        assertEquals(business.active(), actualGenre.isActive());
+        assertEquals(business.categories(), actualGenre.categoriesId());
         assertEquals(business.createdAt(), actualGenre.createdAt());
         assertEquals(business.updatedAt(), actualGenre.updatedAt());
         assertEquals(business.deletedAt(), actualGenre.deletedAt());

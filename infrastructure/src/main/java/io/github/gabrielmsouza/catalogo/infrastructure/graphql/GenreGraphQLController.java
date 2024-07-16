@@ -3,6 +3,7 @@ package io.github.gabrielmsouza.catalogo.infrastructure.graphql;
 import io.github.gabrielmsouza.catalogo.application.genre.list.ListGenreUseCase;
 import io.github.gabrielmsouza.catalogo.application.genre.save.SaveGenreUseCase;
 import io.github.gabrielmsouza.catalogo.infrastructure.genre.models.GenreDTO;
+import io.github.gabrielmsouza.catalogo.infrastructure.genre.models.GenreGraphQLInput;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
@@ -39,7 +40,7 @@ public class GenreGraphQLController {
     }
 
     @MutationMapping
-    public SaveGenreUseCase.Output saveGenre(@Argument GenreDTO input) {
+    public SaveGenreUseCase.Output saveGenre(@Argument GenreGraphQLInput input) {
         return this.saveGenreUseCase.execute(new SaveGenreUseCase.Input(
                 input.id(),
                 input.name(),

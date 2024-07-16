@@ -4,11 +4,11 @@ import io.github.gabrielmsouza.catalogo.domain.category.Category;
 
 import java.time.Instant;
 
-public record CategoryDTO(
+public record CategoryGraphQLInput(
         String id,
         String name,
         String description,
-        Boolean isActive,
+        Boolean active,
         Instant createdAt,
         Instant updatedAt,
         Instant deletedAt
@@ -19,7 +19,7 @@ public record CategoryDTO(
                 this.id,
                 this.name,
                 this.description,
-                this.isActive,
+                this.active,
                 this.createdAt,
                 this.updatedAt,
                 this.deletedAt
@@ -27,7 +27,7 @@ public record CategoryDTO(
     }
 
     @Override
-    public Boolean isActive() {
-        return isActive != null ? isActive : true;
+    public Boolean active() {
+        return active != null ? active : true;
     }
 }

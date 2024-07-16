@@ -78,8 +78,8 @@ public class GenreListener {
                 .map(it -> new SaveGenreUseCase.Input(
                         it.id(),
                         it.name(),
-                        it.active(),
-                        it.categories(),
+                        it.isActive(),
+                        it.categoriesId(),
                         it.createdAt(),
                         it.updatedAt(),
                         it.deletedAt()
