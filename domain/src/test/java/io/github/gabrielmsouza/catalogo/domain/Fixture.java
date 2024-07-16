@@ -4,10 +4,13 @@ package io.github.gabrielmsouza.catalogo.domain;
 import io.github.gabrielmsouza.catalogo.domain.castmember.CastMember;
 import io.github.gabrielmsouza.catalogo.domain.castmember.CastMemberType;
 import io.github.gabrielmsouza.catalogo.domain.category.Category;
+import io.github.gabrielmsouza.catalogo.domain.genre.Genre;
 import io.github.gabrielmsouza.catalogo.domain.utils.IDUtils;
 import io.github.gabrielmsouza.catalogo.domain.utils.InstantUtils;
 import net.datafaker.Faker;
 
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 public final class Fixture {
@@ -105,6 +108,21 @@ public final class Fixture {
 
         public static CastMember director(final String name) {
             return CastMember.with(UUID.randomUUID().toString(), name, CastMemberType.DIRECTOR,  InstantUtils.now(),  InstantUtils.now());
+        }
+    }
+
+    public static final class Genres {
+
+        public static Genre tech() {
+            return Genre.with(IDUtils.uuid(), "Technology", true, Set.of("c456"), InstantUtils.now(), InstantUtils.now(), null);
+        }
+
+        public static Genre business() {
+            return Genre.with(IDUtils.uuid(), "Business", false, new HashSet<>(), InstantUtils.now(), InstantUtils.now(), InstantUtils.now());
+        }
+
+        public static Genre marketing() {
+            return Genre.with(IDUtils.uuid(), "Marketing", true, Set.of("c123"), InstantUtils.now(), InstantUtils.now(), null);
         }
     }
 }

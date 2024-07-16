@@ -85,7 +85,6 @@ class CastMemberListenerTest extends AbstractEmbeddedKafkaTest {
 
         // when
         producer().send(new ProducerRecord<>(this.castMemberTopic, message)).get(10, TimeUnit.SECONDS);
-        producer().flush();
 
         assertTrue(latch.await(1, TimeUnit.MINUTES));
 
@@ -110,7 +109,6 @@ class CastMemberListenerTest extends AbstractEmbeddedKafkaTest {
 
         // when
         producer().send(new ProducerRecord<>(this.castMemberTopic, message)).get(10, TimeUnit.SECONDS);
-        producer().flush();
 
         assertTrue(latch.await(1, TimeUnit.MINUTES));
 
@@ -125,7 +123,7 @@ class CastMemberListenerTest extends AbstractEmbeddedKafkaTest {
         final var castMemberEvent = CastMemberEvent.from(actor);
 
         final var message =
-                Json.writeValueAsString(new MessageValue<>(new ValuePayload<>(castMemberEvent, castMemberEvent, aSource(), Operation.DELETE)));
+                Json.writeValueAsString(new MessageValue<>(new ValuePayload<>(null, castMemberEvent, aSource(), Operation.DELETE)));
 
         final var latch = new CountDownLatch(1);
         doAnswer(t -> {
@@ -135,7 +133,6 @@ class CastMemberListenerTest extends AbstractEmbeddedKafkaTest {
 
         // when
         producer().send(new ProducerRecord<>(this.castMemberTopic, message)).get(10, TimeUnit.SECONDS);
-        producer().flush();
 
         assertTrue(latch.await(1, TimeUnit.MINUTES));
 
@@ -173,7 +170,6 @@ class CastMemberListenerTest extends AbstractEmbeddedKafkaTest {
 
         // when
         producer().send(new ProducerRecord<>(this.castMemberTopic, message)).get(10, TimeUnit.SECONDS);
-        producer().flush();
 
         assertTrue(latch.await(1, TimeUnit.MINUTES));
 

@@ -3,6 +3,7 @@ package io.github.gabrielmsouza.catalogo;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import io.github.gabrielmsouza.catalogo.infrastructure.category.CategoryRestClient;
 import io.github.gabrielmsouza.catalogo.infrastructure.configuration.WebServerConfiguration;
+import io.github.gabrielmsouza.catalogo.infrastructure.genre.GenreRestClient;
 import io.github.resilience4j.bulkhead.BulkheadRegistry;
 import io.github.resilience4j.circuitbreaker.CircuitBreaker;
 import io.github.resilience4j.circuitbreaker.CircuitBreakerRegistry;
@@ -35,7 +36,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 })
 public abstract class AbstractRestClientTest {
 
-    static final String CATEGORY = CategoryRestClient.NAMESPACE;
+    protected static final String CATEGORY = CategoryRestClient.NAMESPACE;
+    protected static final String GENRE = GenreRestClient.NAMESPACE;
 
     @Autowired
     private BulkheadRegistry bulkheadRegistry;
@@ -51,7 +53,7 @@ public abstract class AbstractRestClientTest {
         WireMock.reset();
         WireMock.resetAllRequests();
         resetAllCaches();
-        List.of(CATEGORY).forEach(this::resetFaultTolerance);
+        List.of(CATEGORY, GENRE).forEach(this::resetFaultTolerance);
     }
 
     protected void acquireBulkheadPermission(final String name) {

@@ -3,9 +3,13 @@ package io.github.gabrielmsouza.catalogo.infrastructure.kafka;
 import com.fasterxml.jackson.core.type.TypeReference;
 import io.github.gabrielmsouza.catalogo.application.category.delete.DeleteCategoryUseCase;
 import io.github.gabrielmsouza.catalogo.application.category.save.SaveCategoryUseCase;
+import io.github.gabrielmsouza.catalogo.application.genre.delete.DeleteGenreUseCase;
+import io.github.gabrielmsouza.catalogo.application.genre.save.SaveGenreUseCase;
 import io.github.gabrielmsouza.catalogo.infrastructure.category.CategoryClient;
 import io.github.gabrielmsouza.catalogo.infrastructure.category.models.CategoryEvent;
 import io.github.gabrielmsouza.catalogo.infrastructure.configuration.json.Json;
+import io.github.gabrielmsouza.catalogo.infrastructure.genre.GenreClient;
+import io.github.gabrielmsouza.catalogo.infrastructure.genre.models.GenreEvent;
 import io.github.gabrielmsouza.catalogo.infrastructure.kafka.models.connect.MessageValue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,39 +25,39 @@ import org.springframework.stereotype.Component;
 import java.util.Objects;
 
 @Component
-public class CategoryListener {
-    private static final Logger LOG = LoggerFactory.getLogger(CategoryListener.class);
+public class GenreListener {
+    private static final Logger LOG = LoggerFactory.getLogger(GenreListener.class);
 
-    private static final TypeReference<MessageValue<CategoryEvent>> CATEGORY_MESSAGE = new TypeReference<>() {
+    private static final TypeReference<MessageValue<GenreEvent>> GENRE_MESSAGE = new TypeReference<>() {
     };
 
-    private final SaveCategoryUseCase saveCategoryUseCase;
-    private final DeleteCategoryUseCase deleteCategoryUseCase;
-    private final CategoryClient categoryClient;
+    private final SaveGenreUseCase saveGenreUseCase;
+    private final DeleteGenreUseCase deleteGenreUseCase;
+    private final GenreClient genreClient;
 
-    public CategoryListener(
-            final SaveCategoryUseCase saveCategoryUseCase,
-            final DeleteCategoryUseCase deleteCategoryUseCase,
-            final CategoryClient categoryClient
+    public GenreListener(
+            final SaveGenreUseCase saveGenreUseCase,
+            final DeleteGenreUseCase deleteGenreUseCase,
+            final GenreClient genreClient
     ) {
-        this.saveCategoryUseCase = Objects.requireNonNull(saveCategoryUseCase);
-        this.deleteCategoryUseCase = Objects.requireNonNull(deleteCategoryUseCase);
-        this.categoryClient = Objects.requireNonNull(categoryClient);
+        this.saveGenreUseCase = Objects.requireNonNull(saveGenreUseCase);
+        this.deleteGenreUseCase = Objects.requireNonNull(deleteGenreUseCase);
+        this.genreClient = Objects.requireNonNull(genreClient);
     }
 
     @KafkaListener(
-            id = "${kafka.consumers.categories.id}",
-            groupId = "${kafka.consumers.categories.group-id}",
-            topics = "${kafka.consumers.categories.topics}",
+            id = "${kafka.consumers.genres.id}",
+            groupId = "${kafka.consumers.genres.group-id}",
+            topics = "${kafka.consumers.genres.topics}",
             containerFactory = "kafkaListenerFactory",
-            concurrency = "${kafka.consumers.categories.concurrency}",
+            concurrency = "${kafka.consumers.genres.concurrency}",
             properties = {
-                    "auto.offset.reset=${kafka.consumers.categories.auto-offset-reset}"
+                    "auto.offset.reset=${kafka.consumers.genres.auto-offset-reset}"
             }
     )
     @RetryableTopic(
             backoff = @Backoff(delay = 1000, multiplier = 2),
-            attempts = "${kafka.consumers.categories.max-attempts}",
+            attempts = "${kafka.consumers.genres.max-attempts}",
             topicSuffixingStrategy = TopicSuffixingStrategy.SUFFIX_WITH_INDEX_VALUE
     )
     public void onMessage(@Payload(required = false) final String payload, final ConsumerRecordMetadata metadata) {
@@ -63,17 +67,26 @@ public class CategoryListener {
         }
 
         LOG.info("Message received from Kafka [topic:{}] [partition:{}] [offset:{}]: {}", metadata.topic(), metadata.partition(), metadata.offset(), payload);
-        final var message = Json.readValue(payload, CATEGORY_MESSAGE).payload();
+        final var message = Json.readValue(payload, GENRE_MESSAGE).payload();
         final var operation = message.operation();
         if (operation.isDelete()) {
-            this.deleteCategoryUseCase.execute(message.before().id());
+            this.deleteGenreUseCase.execute(message.before().id());
             return;
         }
 
-        this.categoryClient.categoryOfId(message.after().id())
+        this.genreClient.genreOfId(message.after().id())
+                .map(it -> new SaveGenreUseCase.Input(
+                        it.id(),
+                        it.name(),
+                        it.isActive(),
+                        it.categoriesId(),
+                        it.createdAt(),
+                        it.updatedAt(),
+                        it.deletedAt()
+                ))
                 .ifPresentOrElse(
-                        this.saveCategoryUseCase::execute,
-                        () -> LOG.warn("Category was not found {}", message.after().id())
+                        this.saveGenreUseCase::execute,
+                        () -> LOG.warn("Genre was not found {}", message.after().id())
                 );
     }
 

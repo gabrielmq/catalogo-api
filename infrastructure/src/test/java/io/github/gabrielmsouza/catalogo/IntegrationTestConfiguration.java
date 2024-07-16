@@ -2,6 +2,7 @@ package io.github.gabrielmsouza.catalogo;
 
 import io.github.gabrielmsouza.catalogo.infrastructure.castmember.persistence.CastMemberRepository;
 import io.github.gabrielmsouza.catalogo.infrastructure.category.persistence.CategoryRepository;
+import io.github.gabrielmsouza.catalogo.infrastructure.genre.persistence.GenreRepository;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 
@@ -17,5 +18,10 @@ public class IntegrationTestConfiguration {
     @Bean
     CastMemberRepository castMemberRepository() {
         return mock(CastMemberRepository.class);
+    }
+
+    @Bean
+    GenreRepository genreRepository() {
+        return mock(GenreRepository.class);
     }
 }

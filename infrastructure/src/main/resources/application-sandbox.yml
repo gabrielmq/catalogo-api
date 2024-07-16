@@ -26,5 +26,7 @@ rest-client:
   base-url: ${BASE_URL:http://localhost:8080}
   categories:
     read-timeout: 1_000
+  genres:
+    read-timeout: 1_000
   keycloak:
     read-timeout: 1_000
