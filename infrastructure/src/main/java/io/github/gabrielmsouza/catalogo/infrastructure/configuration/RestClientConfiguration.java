@@ -1,6 +1,7 @@
 package io.github.gabrielmsouza.catalogo.infrastructure.configuration;
 
 import io.github.gabrielmsouza.catalogo.infrastructure.configuration.annontations.Categories;
+import io.github.gabrielmsouza.catalogo.infrastructure.configuration.annontations.Genres;
 import io.github.gabrielmsouza.catalogo.infrastructure.configuration.annontations.Keycloak;
 import io.github.gabrielmsouza.catalogo.infrastructure.configuration.properties.RestClientProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -20,6 +21,13 @@ public class RestClientConfiguration {
     }
 
     @Bean
+    @Genres
+    @ConfigurationProperties("rest-client.genres")
+    RestClientProperties genresRestClientProperties() {
+        return new RestClientProperties();
+    }
+
+    @Bean
     @Keycloak
     @ConfigurationProperties("rest-client.keycloak")
     RestClientProperties keycloakRestClientProperties() {
@@ -31,6 +39,13 @@ public class RestClientConfiguration {
     RestClient categoryHttpClient(@Categories final RestClientProperties properties) {
         return restClient(properties);
     }
+
+    @Bean
+    @Genres
+    RestClient genresHttpClient(@Genres final RestClientProperties properties) {
+        return restClient(properties);
+    }
+
 
     @Bean
     @Keycloak

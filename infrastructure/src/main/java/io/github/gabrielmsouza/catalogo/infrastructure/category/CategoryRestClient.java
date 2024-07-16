@@ -1,5 +1,6 @@
 package io.github.gabrielmsouza.catalogo.infrastructure.category;
 
+import io.github.gabrielmsouza.catalogo.domain.category.Category;
 import io.github.gabrielmsouza.catalogo.infrastructure.authentication.GetClientCredentials;
 import io.github.gabrielmsouza.catalogo.infrastructure.category.models.CategoryDTO;
 import io.github.gabrielmsouza.catalogo.infrastructure.configuration.annontations.Categories;
@@ -39,7 +40,7 @@ public class CategoryRestClient implements CategoryClient, HttpClient {
     @Retry(name = NAMESPACE)
     @Bulkhead(name = NAMESPACE)
     @CircuitBreaker(name = NAMESPACE)
-    public Optional<io.github.gabrielmsouza.catalogo.domain.category.Category> categoryOfId(final String categoryId) {
+    public Optional<Category> categoryOfId(final String categoryId) {
         final var token = this.clientCredentials.retrieve();
         final Supplier<CategoryDTO> request = () ->
                 this.restClient

@@ -16,5 +16,7 @@ rest-client:
   base-url: ${BASE_URL}
   categories:
     read-timeout: 1_000
+  genres:
+    read-timeout: 1_000
   keycloak:
     read-timeout: 1_000

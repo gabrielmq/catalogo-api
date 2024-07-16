@@ -1,6 +1,6 @@
 cache:
   type: cache2k
-  names: admin-categories
+  names: admin-categories,admin-genres
   max-entries: 200
   ttl: 60 # seconds
 
@@ -34,6 +34,9 @@ kafka:
 rest-client:
   categories:
     base-url: "${rest-client.base-url}/api/categories"
+  genres:
+    base-url: "${rest-client.base-url}/api/genres"
+    read-timeout: 1_000
   keycloak:
     base-url: "${keycloak.host}/realms/${keycloak.realm}"
 
@@ -92,6 +95,8 @@ resilience4j.bulkhead:
   instances:
     categories:
       baseConfig: default
+    genres:
+      baseConfig: default
 
 resilience4j.circuitbreaker:
   configs:
@@ -119,6 +124,8 @@ resilience4j.circuitbreaker:
   instances:
     categories:
       baseConfig: default
+    genres:
+      baseConfig: default
 
 resilience4j.retry:
   configs:
@@ -138,6 +145,8 @@ resilience4j.retry:
         - java.io.IOException
   instances:
     categories:
+      baseConfig: default
+    genres:
       baseConfig: default
 
 logging:
