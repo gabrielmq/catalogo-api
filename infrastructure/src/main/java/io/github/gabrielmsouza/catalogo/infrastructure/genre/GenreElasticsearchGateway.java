@@ -18,9 +18,11 @@ import org.springframework.data.elasticsearch.core.query.Query;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.StreamSupport;
 
 @Component
 public class GenreElasticsearchGateway implements GenreGateway {
@@ -77,6 +79,16 @@ public class GenreElasticsearchGateway implements GenreGateway {
                 .toList();
 
         return new Pagination<>(currentPage, itemsPerPage, total, genres);
+    }
+
+    @Override
+    public List<Genre> findAllById(final Set<String> ids) {
+        if (ids == null || ids.isEmpty()) {
+            return List.of();
+        }
+        return StreamSupport.stream(this.repository.findAllById(ids).spliterator(), false)
+                .map(GenreDocument::toGenre)
+                .toList();
     }
 
     private static Criteria createCriteria(final GenreSearchQuery aQuery) {

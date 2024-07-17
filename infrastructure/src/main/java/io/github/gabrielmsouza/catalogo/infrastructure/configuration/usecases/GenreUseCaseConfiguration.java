@@ -1,6 +1,7 @@
 package io.github.gabrielmsouza.catalogo.infrastructure.configuration.usecases;
 
 import io.github.gabrielmsouza.catalogo.application.genre.delete.DeleteGenreUseCase;
+import io.github.gabrielmsouza.catalogo.application.genre.get.GetAllGenresByIdUseCase;
 import io.github.gabrielmsouza.catalogo.application.genre.list.ListGenreUseCase;
 import io.github.gabrielmsouza.catalogo.application.genre.save.SaveGenreUseCase;
 import io.github.gabrielmsouza.catalogo.domain.genre.GenreGateway;
@@ -30,5 +31,10 @@ public class GenreUseCaseConfiguration {
     @Bean
     ListGenreUseCase listGenreUseCase() {
         return new ListGenreUseCase(gateway);
+    }
+
+    @Bean
+    GetAllGenresByIdUseCase getAllGenresByIdUseCase() {
+        return new GetAllGenresByIdUseCase(gateway);
     }
 }

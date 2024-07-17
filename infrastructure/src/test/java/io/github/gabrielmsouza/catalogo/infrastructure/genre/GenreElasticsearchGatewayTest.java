@@ -14,6 +14,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.List;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -389,6 +390,52 @@ class GenreElasticsearchGatewayTest extends AbstractElasticsearchTest {
         if (StringUtils.isNotEmpty(expectedName)) {
             assertEquals(expectedName, actualOutput.data().get(0).name());
         }
+    }
+
+    @Test
+    public void givenValidIds_whenCallsFindAllById_shouldReturnElements() {
+        // given
+        final var tech = this.repository.save(GenreDocument.from(Fixture.Genres.tech()));
+        this.repository.save(GenreDocument.from(Fixture.Genres.business()));
+        final var marketing = this.repository.save(GenreDocument.from(Fixture.Genres.marketing()));
+
+        final var expectedSize = 2;
+        final var expectedIds = Set.of(tech.id(), marketing.id());
+
+        // when
+        final var actualOutput = this.gateway.findAllById(expectedIds);
+
+        // then
+        assertEquals(expectedSize, actualOutput.size());
+
+        final var actualIds = actualOutput.stream().map(Genre::id).toList();
+        assertTrue(expectedIds.containsAll(actualIds));
+    }
+
+    @Test
+    public void givenNullIds_whenCallsFindAllById_shouldReturnEmpty() {
+        // given
+        final var expectedItems = List.of();
+        final Set<String> expectedIds = null;
+
+        // when
+        final var actualOutput = this.gateway.findAllById(expectedIds);
+
+        // then
+        assertEquals(expectedItems, actualOutput);
+    }
+
+    @Test
+    public void givenEmptyIds_whenCallsFindAllById_shouldReturnEmpty() {
+        // given
+        final var expectedItems = List.of();
+        final Set<String> expectedIds = Set.of();
+
+        // when
+        final var actualOutput = this.gateway.findAllById(expectedIds);
+
+        // then
+        assertEquals(expectedItems, actualOutput);
     }
 
     private void mockGenres() {
