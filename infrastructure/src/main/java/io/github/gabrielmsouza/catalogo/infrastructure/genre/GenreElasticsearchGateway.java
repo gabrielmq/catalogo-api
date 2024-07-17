@@ -7,6 +7,7 @@ import io.github.gabrielmsouza.catalogo.domain.pagination.Pagination;
 import io.github.gabrielmsouza.catalogo.infrastructure.genre.persistence.GenreDocument;
 import io.github.gabrielmsouza.catalogo.infrastructure.genre.persistence.GenreRepository;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.context.annotation.Profile;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
@@ -25,6 +26,7 @@ import java.util.Set;
 import java.util.stream.StreamSupport;
 
 @Component
+@Profile("!dev")
 public class GenreElasticsearchGateway implements GenreGateway {
     private static final String NAME_PROP = "name";
     private static final String KEYWORD = ".keyword";
