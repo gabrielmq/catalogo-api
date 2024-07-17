@@ -9,6 +9,8 @@ import io.github.gabrielmsouza.catalogo.domain.category.CategorySearchQuery;
 import io.github.gabrielmsouza.catalogo.domain.pagination.Pagination;
 import io.github.gabrielmsouza.catalogo.domain.utils.IDUtils;
 import io.github.gabrielmsouza.catalogo.domain.utils.InstantUtils;
+import io.github.gabrielmsouza.catalogo.infrastructure.category.CategoryGQLPresenter;
+import io.github.gabrielmsouza.catalogo.infrastructure.category.models.CategoryGQL;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,10 +40,12 @@ public class CategoryGraphQLControllerTest {
     @Test
     void givenDefaultArguments_whenCallsListCategories_thenShouldReturn() {
         // given
-        final var expectedCategories = List.of(
+        final var categories = List.of(
                 ListCategoryUseCase.Output.from(Fixture.Categories.lives()),
                 ListCategoryUseCase.Output.from(Fixture.Categories.aulas())
         );
+
+        final var expectedCategories = categories.stream().map(CategoryGQLPresenter::present).toList();
 
         final var expectedPage = 0;
         final var expectedPerPage = 10;
@@ -52,8 +56,8 @@ public class CategoryGraphQLControllerTest {
         final var pagination = new Pagination<>(
                 expectedPage,
                 expectedPerPage,
-                expectedCategories.size(),
-                expectedCategories
+                categories.size(),
+                categories
         );
 
         when(this.listCategoryUseCase.execute(any())).thenReturn(pagination);
@@ -63,14 +67,15 @@ public class CategoryGraphQLControllerTest {
                         categories {
                             id
                             name
+                            description
                         }
                     }
                 """;
 
         // when
-        final var actualCategory = this.graphql.document(query).execute()
-                .path("categories")
-                .entityList(ListCategoryUseCase.Output.class)
+        final var res = this.graphql.document(query).execute();
+        final var actualCategory = res.path("categories")
+                .entityList(CategoryGQL.class)
                 .get();
 
         // then
@@ -93,10 +98,12 @@ public class CategoryGraphQLControllerTest {
     @Test
     void givenCustomArguments_whenCallsListCategories_thenShouldReturn() {
         // given
-        final var expectedCategories = List.of(
+        final var categories = List.of(
                 ListCategoryUseCase.Output.from(Fixture.Categories.lives()),
                 ListCategoryUseCase.Output.from(Fixture.Categories.aulas())
         );
+
+        final var expectedCategories = categories.stream().map(CategoryGQLPresenter::present).toList();
 
         final var expectedPage = 2;
         final var expectedPerPage = 15;
@@ -107,8 +114,8 @@ public class CategoryGraphQLControllerTest {
         final var pagination = new Pagination<>(
                 expectedPage,
                 expectedPerPage,
-                expectedCategories.size(),
-                expectedCategories
+                categories.size(),
+                categories
         );
 
         when(this.listCategoryUseCase.execute(any())).thenReturn(pagination);
@@ -118,20 +125,22 @@ public class CategoryGraphQLControllerTest {
                         categories(search: $search, page: $page, perPage: $perPage, sort: $sort, direction: $direction) {
                             id
                             name
+                            description
                         }
                     }
                 """;
 
         // when
-        final var actualCategory = this.graphql.document(query)
+        final var res  = this.graphql.document(query)
                 .variable("search", expectedSearch)
                 .variable("page", expectedPage)
                 .variable("perPage", expectedPerPage)
                 .variable("sort", expectedSort)
                 .variable("direction", expectedDirection)
-                .execute()
-                .path("categories")
-                .entityList(ListCategoryUseCase.Output.class)
+                .execute();
+
+        final var actualCategory = res.path("categories")
+                .entityList(CategoryGQL.class)
                 .get();
 
         // then

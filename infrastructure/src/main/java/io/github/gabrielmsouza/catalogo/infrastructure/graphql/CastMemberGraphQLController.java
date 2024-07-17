@@ -8,7 +8,9 @@ import io.github.gabrielmsouza.catalogo.domain.castmember.CastMember;
 import io.github.gabrielmsouza.catalogo.domain.castmember.CastMemberSearchQuery;
 import io.github.gabrielmsouza.catalogo.domain.category.Category;
 import io.github.gabrielmsouza.catalogo.domain.category.CategorySearchQuery;
+import io.github.gabrielmsouza.catalogo.infrastructure.castmember.CastMemberGQLPresenter;
 import io.github.gabrielmsouza.catalogo.infrastructure.castmember.models.CastMemberDTO;
+import io.github.gabrielmsouza.catalogo.infrastructure.castmember.models.CastMemberGQL;
 import io.github.gabrielmsouza.catalogo.infrastructure.category.models.CategoryDTO;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
@@ -32,7 +34,7 @@ public class CastMemberGraphQLController {
     }
 
     @QueryMapping
-    public List<ListCastMemberUseCase.Output> castMembers(
+    public List<CastMemberGQL> castMembers(
             @Argument String search,
             @Argument int page,
             @Argument int perPage,
@@ -40,13 +42,15 @@ public class CastMemberGraphQLController {
             @Argument String direction
     ) {
         final var aQuery = new CastMemberSearchQuery(page, perPage, search, sort, direction);
-        return this.listCastMemberUseCase.execute(aQuery).data();
+        return this.listCastMemberUseCase.execute(aQuery)
+                .map(CastMemberGQLPresenter::present)
+                .data();
     }
 
     @MutationMapping
-    public CastMember saveCastMember(@Argument CastMemberDTO input) {
+    public CastMemberGQL saveCastMember(@Argument CastMemberDTO input) {
         final var aCastMember = input.toCastMember();
-        return this.saveCastMemberUseCase.execute(aCastMember);
+        return CastMemberGQLPresenter.present(this.saveCastMemberUseCase.execute(aCastMember));
     }
 }
 

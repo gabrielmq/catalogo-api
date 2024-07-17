@@ -127,7 +127,6 @@ public class VideoGraphQLControllerTest {
 
         // when
         final var res = this.graphql.document(query).execute();
-
         final var actualVideos = res.path("videos")
                 .entityList(VideoOutput.class)
                 .get();
@@ -399,7 +398,7 @@ public class VideoGraphQLControllerTest {
         Assertions.assertEquals(expectedDates, actualVideo.updatedAt());
     }
 
-    record VideoOutput(
+    public record VideoOutput(
             String id,
             String title,
             String description,

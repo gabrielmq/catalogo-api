@@ -5,7 +5,7 @@ import io.github.gabrielmsouza.catalogo.domain.genre.Genre;
 import java.time.Instant;
 import java.util.Set;
 
-public record GenreGraphQLInput(
+public record GenreGQLInput(
         String id,
         String name,
         Boolean active,
@@ -14,8 +14,8 @@ public record GenreGraphQLInput(
         Instant updatedAt,
         Instant deletedAt
 ) {
-    public static GenreGraphQLInput from(final Genre genre) {
-        return new GenreGraphQLInput(
+    public static GenreGQLInput from(final Genre genre) {
+        return new GenreGQLInput(
                 genre.id(),
                 genre.name(),
                 genre.active(),

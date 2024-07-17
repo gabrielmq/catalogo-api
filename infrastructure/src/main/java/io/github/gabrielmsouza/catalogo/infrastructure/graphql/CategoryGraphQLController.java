@@ -2,9 +2,10 @@ package io.github.gabrielmsouza.catalogo.infrastructure.graphql;
 
 import io.github.gabrielmsouza.catalogo.application.category.list.ListCategoryUseCase;
 import io.github.gabrielmsouza.catalogo.application.category.save.SaveCategoryUseCase;
-import io.github.gabrielmsouza.catalogo.domain.category.Category;
 import io.github.gabrielmsouza.catalogo.domain.category.CategorySearchQuery;
-import io.github.gabrielmsouza.catalogo.infrastructure.category.models.CategoryGraphQLInput;
+import io.github.gabrielmsouza.catalogo.infrastructure.category.CategoryGQLPresenter;
+import io.github.gabrielmsouza.catalogo.infrastructure.category.models.CategoryGQL;
+import io.github.gabrielmsouza.catalogo.infrastructure.category.models.CategoryGQLInput;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
@@ -27,7 +28,7 @@ public class CategoryGraphQLController {
     }
 
     @QueryMapping
-    public List<ListCategoryUseCase.Output> categories(
+    public List<CategoryGQL> categories(
             @Argument String search,
             @Argument int page,
             @Argument int perPage,
@@ -35,14 +36,14 @@ public class CategoryGraphQLController {
             @Argument String direction
     ) {
         final var aQuery = new CategorySearchQuery(page, perPage, search, sort, direction);
-        return this.listCategoryUseCase.execute(aQuery).data();
+        return this.listCategoryUseCase.execute(aQuery)
+                .map(CategoryGQLPresenter::present)
+                .data();
     }
 
     @MutationMapping
-    public Category saveCategory(@Argument CategoryGraphQLInput input) {
-        final var aCategory = input.toCategory();
-        this.saveCategoryUseCase.execute(aCategory);
-        return aCategory;
+    public CategoryGQL saveCategory(@Argument CategoryGQLInput input) {
+        return CategoryGQLPresenter.present(this.saveCategoryUseCase.execute(input.toCategory()));
     }
 }
 

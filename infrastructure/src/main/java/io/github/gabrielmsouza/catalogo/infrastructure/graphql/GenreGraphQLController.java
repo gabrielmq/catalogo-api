@@ -2,8 +2,9 @@ package io.github.gabrielmsouza.catalogo.infrastructure.graphql;
 
 import io.github.gabrielmsouza.catalogo.application.genre.list.ListGenreUseCase;
 import io.github.gabrielmsouza.catalogo.application.genre.save.SaveGenreUseCase;
-import io.github.gabrielmsouza.catalogo.infrastructure.genre.models.GenreDTO;
-import io.github.gabrielmsouza.catalogo.infrastructure.genre.models.GenreGraphQLInput;
+import io.github.gabrielmsouza.catalogo.infrastructure.genre.GenreGQLPresenter;
+import io.github.gabrielmsouza.catalogo.infrastructure.genre.models.GenreGQL;
+import io.github.gabrielmsouza.catalogo.infrastructure.genre.models.GenreGQLInput;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
@@ -27,7 +28,7 @@ public class GenreGraphQLController {
     }
 
     @QueryMapping
-    public List<ListGenreUseCase.Output> genres(
+    public List<GenreGQL> genres(
             @Argument String search,
             @Argument int page,
             @Argument int perPage,
@@ -36,12 +37,14 @@ public class GenreGraphQLController {
             @Argument Set<String> categories
     ) {
         final var aQuery = new ListGenreUseCase.Input(page, perPage, search, sort, direction, categories);
-        return this.listGenreUseCase.execute(aQuery).data();
+        return this.listGenreUseCase.execute(aQuery)
+                .map(GenreGQLPresenter::present)
+                .data();
     }
 
     @MutationMapping
-    public SaveGenreUseCase.Output saveGenre(@Argument GenreGraphQLInput input) {
-        return this.saveGenreUseCase.execute(new SaveGenreUseCase.Input(
+    public SaveGenreUseCase.Output saveGenre(@Argument GenreGQLInput input) {
+        final var aInput = new SaveGenreUseCase.Input(
                 input.id(),
                 input.name(),
                 input.active(),
@@ -49,6 +52,7 @@ public class GenreGraphQLController {
                 input.createdAt(),
                 input.updatedAt(),
                 input.deletedAt()
-        ));
+        );
+        return this.saveGenreUseCase.execute(aInput);
     }
 }

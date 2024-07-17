@@ -5,6 +5,14 @@ import io.github.gabrielmsouza.catalogo.application.category.get.GetAllCategorie
 import io.github.gabrielmsouza.catalogo.application.genre.get.GetAllGenresByIdUseCase;
 import io.github.gabrielmsouza.catalogo.application.video.list.ListVideoUseCase;
 import io.github.gabrielmsouza.catalogo.application.video.save.SaveVideoUseCase;
+import io.github.gabrielmsouza.catalogo.infrastructure.castmember.CastMemberGQLPresenter;
+import io.github.gabrielmsouza.catalogo.infrastructure.castmember.models.CastMemberGQL;
+import io.github.gabrielmsouza.catalogo.infrastructure.category.CategoryGQLPresenter;
+import io.github.gabrielmsouza.catalogo.infrastructure.category.models.CategoryGQL;
+import io.github.gabrielmsouza.catalogo.infrastructure.genre.GenreGQLPresenter;
+import io.github.gabrielmsouza.catalogo.infrastructure.genre.models.GenreGQL;
+import io.github.gabrielmsouza.catalogo.infrastructure.video.VideoGQLPresenter;
+import io.github.gabrielmsouza.catalogo.infrastructure.video.models.VideoGQL;
 import io.github.gabrielmsouza.catalogo.infrastructure.video.models.VideoGQLInput;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
@@ -39,7 +47,7 @@ public class VideoGraphQLController {
     }
 
     @QueryMapping
-    public List<ListVideoUseCase.Output> videos(
+    public List<VideoGQL> videos(
             @Argument final String search,
             @Argument final int page,
             @Argument final int perPage,
@@ -63,25 +71,33 @@ public class VideoGraphQLController {
                 castMembers,
                 genres
         );
-        return this.listVideoUseCase.execute(input).data();
+        return this.listVideoUseCase.execute(input)
+                .map(VideoGQLPresenter::present)
+                .data();
     }
 
     @SchemaMapping(typeName = "Video", field = "castMembers")
-    public List<GetAllCastMembersByIdUseCase.Output> castMembers(final ListVideoUseCase.Output video) {
+    public List<CastMemberGQL> castMembers(final VideoGQL video) {
         final var input = new GetAllCastMembersByIdUseCase.Input(video.castMembersId());
-        return this.getAllCastMembersByIdUseCase.execute(input);
+        return this.getAllCastMembersByIdUseCase.execute(input).stream()
+                .map(CastMemberGQLPresenter::present)
+                .toList();
     }
 
     @SchemaMapping(typeName = "Video", field = "genres")
-    public List<GetAllGenresByIdUseCase.Output> genres(final ListVideoUseCase.Output video) {
+    public List<GenreGQL> genres(final VideoGQL video) {
         final var input = new GetAllGenresByIdUseCase.Input(video.genresId());
-        return this.getAllGenresByIdUseCase.execute(input);
+        return this.getAllGenresByIdUseCase.execute(input).stream()
+                .map(GenreGQLPresenter::present)
+                .toList();
     }
 
     @SchemaMapping(typeName = "Video", field = "categories")
-    public List<GetAllCategoriesByIdUseCase.Output> categories(final ListVideoUseCase.Output video) {
+    public List<CategoryGQL> categories(final VideoGQL video) {
         final var input = new GetAllCategoriesByIdUseCase.Input(video.categoriesId());
-        return this.getAllCategoriesByIdUseCase.execute(input);
+        return this.getAllCategoriesByIdUseCase.execute(input).stream()
+                .map(CategoryGQLPresenter::present)
+                .toList();
     }
 
     @MutationMapping

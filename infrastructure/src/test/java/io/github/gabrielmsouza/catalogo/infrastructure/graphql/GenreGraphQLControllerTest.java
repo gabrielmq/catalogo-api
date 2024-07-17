@@ -7,6 +7,8 @@ import io.github.gabrielmsouza.catalogo.domain.Fixture;
 import io.github.gabrielmsouza.catalogo.domain.pagination.Pagination;
 import io.github.gabrielmsouza.catalogo.domain.utils.IDUtils;
 import io.github.gabrielmsouza.catalogo.domain.utils.InstantUtils;
+import io.github.gabrielmsouza.catalogo.infrastructure.genre.GenreGQLPresenter;
+import io.github.gabrielmsouza.catalogo.infrastructure.genre.models.GenreGQL;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,10 +37,12 @@ public class GenreGraphQLControllerTest {
     @Test
     void givenDefaultArguments_whenCallsListGenres_thenShouldReturn() {
         // given
-        final var expectedGenres = List.of(
+        final var genres = List.of(
                 ListGenreUseCase.Output.from(Fixture.Genres.business()),
                 ListGenreUseCase.Output.from(Fixture.Genres.tech())
         );
+
+        final var expectedGenres = genres.stream().map(GenreGQLPresenter::present).toList();
 
         final var expectedPage = 0;
         final var expectedPerPage = 10;
@@ -50,8 +54,8 @@ public class GenreGraphQLControllerTest {
         final var pagination = new Pagination<>(
                 expectedPage,
                 expectedPerPage,
-                expectedGenres.size(),
-                expectedGenres
+                genres.size(),
+                genres
         );
 
         when(this.listGenreUseCase.execute(any())).thenReturn(pagination);
@@ -71,9 +75,9 @@ public class GenreGraphQLControllerTest {
                 """;
 
         // when
-        final var actualGenres = this.graphql.document(query).execute()
-                .path("genres")
-                .entityList(ListGenreUseCase.Output.class)
+        final var res = this.graphql.document(query).execute();
+        final var actualGenres = res.path("genres")
+                .entityList(GenreGQL.class)
                 .get();
 
         // then
@@ -97,10 +101,12 @@ public class GenreGraphQLControllerTest {
     @Test
     void givenCustomArguments_whenCallsListGenres_thenShouldReturn() {
         // given
-        final var expectedGenres = List.of(
+        final var genres = List.of(
                 ListGenreUseCase.Output.from(Fixture.Genres.business()),
                 ListGenreUseCase.Output.from(Fixture.Genres.tech())
         );
+
+        final var expectedGenres = genres.stream().map(GenreGQLPresenter::present).toList();
 
         final var expectedPage = 2;
         final var expectedPerPage = 15;
@@ -112,8 +118,8 @@ public class GenreGraphQLControllerTest {
         final var pagination = new Pagination<>(
                 expectedPage,
                 expectedPerPage,
-                expectedGenres.size(),
-                expectedGenres
+                genres.size(),
+                genres
         );
 
         when(this.listGenreUseCase.execute(any())).thenReturn(pagination);
@@ -133,16 +139,17 @@ public class GenreGraphQLControllerTest {
                 """;
 
         // when
-        final var actualGenres = this.graphql.document(query)
+        final var res = this.graphql.document(query)
                 .variable("search", expectedSearch)
                 .variable("page", expectedPage)
                 .variable("perPage", expectedPerPage)
                 .variable("sort", expectedSort)
                 .variable("direction", expectedDirection)
                 .variable("categories", expectedCategories)
-                .execute()
-                .path("genres")
-                .entityList(ListGenreUseCase.Output.class)
+                .execute();
+
+        final var actualGenres = res.path("genres")
+                .entityList(GenreGQL.class)
                 .get();
 
         // then
