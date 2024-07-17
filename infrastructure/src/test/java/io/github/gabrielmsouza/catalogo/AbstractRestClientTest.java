@@ -4,6 +4,7 @@ import com.github.tomakehurst.wiremock.client.WireMock;
 import io.github.gabrielmsouza.catalogo.infrastructure.category.CategoryRestClient;
 import io.github.gabrielmsouza.catalogo.infrastructure.configuration.WebServerConfiguration;
 import io.github.gabrielmsouza.catalogo.infrastructure.genre.GenreRestClient;
+import io.github.gabrielmsouza.catalogo.infrastructure.video.VideoRestClient;
 import io.github.resilience4j.bulkhead.BulkheadRegistry;
 import io.github.resilience4j.circuitbreaker.CircuitBreaker;
 import io.github.resilience4j.circuitbreaker.CircuitBreakerRegistry;
@@ -38,6 +39,7 @@ public abstract class AbstractRestClientTest {
 
     protected static final String CATEGORY = CategoryRestClient.NAMESPACE;
     protected static final String GENRE = GenreRestClient.NAMESPACE;
+    protected static final String VIDEO = VideoRestClient.NAMESPACE;
 
     @Autowired
     private BulkheadRegistry bulkheadRegistry;
@@ -53,7 +55,7 @@ public abstract class AbstractRestClientTest {
         WireMock.reset();
         WireMock.resetAllRequests();
         resetAllCaches();
-        List.of(CATEGORY, GENRE).forEach(this::resetFaultTolerance);
+        List.of(CATEGORY, GENRE, VIDEO).forEach(this::resetFaultTolerance);
     }
 
     protected void acquireBulkheadPermission(final String name) {
