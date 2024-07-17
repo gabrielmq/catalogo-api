@@ -1,6 +1,7 @@
 package io.github.gabrielmsouza.catalogo.infrastructure.configuration.usecases;
 
 import io.github.gabrielmsouza.catalogo.application.castmember.delete.DeleteCastMemberUseCase;
+import io.github.gabrielmsouza.catalogo.application.castmember.get.GetAllCastMembersByIdUseCase;
 import io.github.gabrielmsouza.catalogo.application.castmember.list.ListCastMemberUseCase;
 import io.github.gabrielmsouza.catalogo.application.castmember.save.SaveCastMemberUseCase;
 import io.github.gabrielmsouza.catalogo.domain.castmember.CastMemberGateway;
@@ -30,5 +31,10 @@ public class CastMemberUseCaseConfiguration {
     @Bean
     ListCastMemberUseCase listCastMemberUseCase() {
         return new ListCastMemberUseCase(gateway);
+    }
+
+    @Bean
+    GetAllCastMembersByIdUseCase getAllCastMembersByIdUseCase() {
+        return new GetAllCastMembersByIdUseCase(gateway);
     }
 }

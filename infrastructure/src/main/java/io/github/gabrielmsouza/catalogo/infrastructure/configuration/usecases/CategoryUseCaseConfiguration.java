@@ -1,6 +1,7 @@
 package io.github.gabrielmsouza.catalogo.infrastructure.configuration.usecases;
 
 import io.github.gabrielmsouza.catalogo.application.category.delete.DeleteCategoryUseCase;
+import io.github.gabrielmsouza.catalogo.application.category.get.GetAllCategoriesByIdUseCase;
 import io.github.gabrielmsouza.catalogo.application.category.list.ListCategoryUseCase;
 import io.github.gabrielmsouza.catalogo.application.category.save.SaveCategoryUseCase;
 import io.github.gabrielmsouza.catalogo.domain.category.CategoryGateway;
@@ -30,5 +31,10 @@ public class CategoryUseCaseConfiguration {
     @Bean
     ListCategoryUseCase listCategoryUseCase() {
         return new ListCategoryUseCase(gateway);
+    }
+
+    @Bean
+    GetAllCategoriesByIdUseCase getAllCategoriesByIdUseCase() {
+        return new GetAllCategoriesByIdUseCase(gateway);
     }
 }

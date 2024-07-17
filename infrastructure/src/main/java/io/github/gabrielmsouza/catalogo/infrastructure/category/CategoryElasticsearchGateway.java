@@ -16,8 +16,11 @@ import org.springframework.data.elasticsearch.core.query.CriteriaQuery;
 import org.springframework.data.elasticsearch.core.query.Query;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.StreamSupport;
 
 import static org.springframework.data.elasticsearch.core.query.Criteria.where;
 
@@ -83,6 +86,16 @@ public class CategoryElasticsearchGateway implements CategoryGateway {
             return new CriteriaQuery(criteria, page);
         }
         return Query.findAll().setPageable(page);
+    }
+
+    @Override
+    public List<Category> findAllById(final Set<String> ids) {
+        if (ids == null || ids.isEmpty()) {
+            return List.of();
+        }
+        return StreamSupport.stream(this.repository.findAllById(ids).spliterator(), false)
+                .map(CategoryDocument::toCategory)
+                .toList();
     }
 
     private String buildSort(final String sort) {
