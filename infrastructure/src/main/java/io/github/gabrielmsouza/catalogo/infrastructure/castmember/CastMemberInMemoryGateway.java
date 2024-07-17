@@ -7,8 +7,10 @@ import io.github.gabrielmsouza.catalogo.domain.pagination.Pagination;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Component
@@ -44,5 +46,13 @@ public class CastMemberInMemoryGateway implements CastMemberGateway {
                 this.db.values().size(),
                 this.db.values().stream().toList()
         );
+    }
+
+    @Override
+    public List<CastMember> findAllById(Set<String> genreId) {
+        if (genreId == null || genreId.isEmpty()) {
+            return List.of();
+        }
+        return genreId.stream().map(this.db::get).toList();
     }
 }
