@@ -2,12 +2,14 @@ package io.github.gabrielmsouza.catalogo.infrastructure.graphql;
 
 import io.github.gabrielmsouza.catalogo.application.genre.list.ListGenreUseCase;
 import io.github.gabrielmsouza.catalogo.application.genre.save.SaveGenreUseCase;
+import io.github.gabrielmsouza.catalogo.infrastructure.configuration.security.Roles;
 import io.github.gabrielmsouza.catalogo.infrastructure.genre.GenreGQLPresenter;
 import io.github.gabrielmsouza.catalogo.infrastructure.genre.models.GenreGQL;
 import io.github.gabrielmsouza.catalogo.infrastructure.genre.models.GenreGQLInput;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 
 import java.util.List;
@@ -28,6 +30,7 @@ public class GenreGraphQLController {
     }
 
     @QueryMapping
+    @Secured({ Roles.ROLE_ADMIN, Roles.ROLE_SUBSCRIBER, Roles.ROLE_GENRES })
     public List<GenreGQL> genres(
             @Argument String search,
             @Argument int page,
@@ -43,6 +46,7 @@ public class GenreGraphQLController {
     }
 
     @MutationMapping
+    @Secured({ Roles.ROLE_ADMIN, Roles.ROLE_SUBSCRIBER, Roles.ROLE_GENRES })
     public SaveGenreUseCase.Output saveGenre(@Argument GenreGQLInput input) {
         final var aInput = new SaveGenreUseCase.Input(
                 input.id(),

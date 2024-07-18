@@ -1,6 +1,5 @@
 package io.github.gabrielmsouza.catalogo.infrastructure.configuration;
 
-import com.nimbusds.jose.shaded.gson.JsonObject;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -25,17 +24,13 @@ import java.util.stream.Stream;
 
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
-@Profile("!dev & !sandbox")
+@Profile("!dev")
 @EnableWebSecurity
 @Configuration(proxyBeanMethods = false)
 @EnableMethodSecurity(securedEnabled = true, jsr250Enabled = true)
 public class SecurityConfiguration {
 
     private static final String ROLE_ADMIN = "CATALOGO_ADMIN";
-    private static final String ROLE_CAST_MEMBERS = "CATALOGO_CAST_MEMBERS";
-    public static final String ROLE_CATEGORIES = "CATALOGO_CATEGORIES";
-    public static final String ROLE_GENRES = "CATALOGO_GENRES";
-    public static final String ROLE_VIDEOS = "CATALOGO_VIDEOS";
 
     @Bean
     public SecurityFilterChain securityFilterChain(final HttpSecurity httpSecurity) throws Exception {
@@ -43,10 +38,7 @@ public class SecurityConfiguration {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth ->
                     auth
-                        .requestMatchers("/cast_members*").hasAnyRole(ROLE_ADMIN, ROLE_CAST_MEMBERS)
-                        .requestMatchers("/categories*").hasAnyRole(ROLE_ADMIN, ROLE_CATEGORIES)
-                        .requestMatchers("/genres*").hasAnyRole(ROLE_ADMIN, ROLE_GENRES)
-                        .requestMatchers("/videos*").hasAnyRole(ROLE_ADMIN, ROLE_VIDEOS)
+                        .requestMatchers("/graphql", "/graphiql").permitAll()
                         .anyRequest().hasRole(ROLE_ADMIN))
                 .oauth2ResourceServer(oauth ->
                     oauth.jwt(jwt -> jwt.jwtAuthenticationConverter(new KeycloakJwtConverter())))
@@ -97,7 +89,7 @@ public class SecurityConfiguration {
             final Function<Map.Entry<String, Object>, Stream<String>> mapResource =
                     resource -> {
                         final var key = resource.getKey();
-                        final var value = (JsonObject) resource.getValue();
+                        final var value = (Map) resource.getValue();
                         final var roles = (Collection<String>) value.get(ROLES);
                         return roles.stream().map(role -> key.concat(SEPARATOR).concat(role));
                     };

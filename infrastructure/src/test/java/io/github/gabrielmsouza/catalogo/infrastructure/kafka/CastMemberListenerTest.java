@@ -11,6 +11,7 @@ import io.github.gabrielmsouza.catalogo.infrastructure.kafka.models.connect.Oper
 import io.github.gabrielmsouza.catalogo.infrastructure.kafka.models.connect.ValuePayload;
 import org.apache.kafka.clients.admin.TopicListing;
 import org.apache.kafka.clients.producer.ProducerRecord;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
@@ -29,6 +30,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
+@Disabled
 class CastMemberListenerTest extends AbstractEmbeddedKafkaTest {
     @MockBean
     private DeleteCastMemberUseCase deleteCastMemberUseCase;

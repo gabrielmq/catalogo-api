@@ -2,19 +2,15 @@ package io.github.gabrielmsouza.catalogo.infrastructure.graphql;
 
 import io.github.gabrielmsouza.catalogo.application.castmember.list.ListCastMemberUseCase;
 import io.github.gabrielmsouza.catalogo.application.castmember.save.SaveCastMemberUseCase;
-import io.github.gabrielmsouza.catalogo.application.category.list.ListCategoryUseCase;
-import io.github.gabrielmsouza.catalogo.application.category.save.SaveCategoryUseCase;
-import io.github.gabrielmsouza.catalogo.domain.castmember.CastMember;
 import io.github.gabrielmsouza.catalogo.domain.castmember.CastMemberSearchQuery;
-import io.github.gabrielmsouza.catalogo.domain.category.Category;
-import io.github.gabrielmsouza.catalogo.domain.category.CategorySearchQuery;
 import io.github.gabrielmsouza.catalogo.infrastructure.castmember.CastMemberGQLPresenter;
 import io.github.gabrielmsouza.catalogo.infrastructure.castmember.models.CastMemberDTO;
 import io.github.gabrielmsouza.catalogo.infrastructure.castmember.models.CastMemberGQL;
-import io.github.gabrielmsouza.catalogo.infrastructure.category.models.CategoryDTO;
+import io.github.gabrielmsouza.catalogo.infrastructure.configuration.security.Roles;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 
 import java.util.List;
@@ -34,6 +30,7 @@ public class CastMemberGraphQLController {
     }
 
     @QueryMapping
+    @Secured({ Roles.ROLE_ADMIN, Roles.ROLE_SUBSCRIBER, Roles.ROLE_CAST_MEMBERS })
     public List<CastMemberGQL> castMembers(
             @Argument String search,
             @Argument int page,
@@ -48,6 +45,7 @@ public class CastMemberGraphQLController {
     }
 
     @MutationMapping
+    @Secured({ Roles.ROLE_ADMIN, Roles.ROLE_SUBSCRIBER, Roles.ROLE_CAST_MEMBERS })
     public CastMemberGQL saveCastMember(@Argument CastMemberDTO input) {
         final var aCastMember = input.toCastMember();
         return CastMemberGQLPresenter.present(this.saveCastMemberUseCase.execute(aCastMember));
