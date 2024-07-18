@@ -4,7 +4,7 @@ import io.github.gabrielmsouza.catalogo.domain.category.Category;
 
 import java.time.Instant;
 
-public record CategoryGraphQLInput(
+public record CategoryGQLInput(
         String id,
         String name,
         String description,

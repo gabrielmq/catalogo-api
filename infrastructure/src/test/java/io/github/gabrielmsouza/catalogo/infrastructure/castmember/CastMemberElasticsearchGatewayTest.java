@@ -2,16 +2,18 @@ package io.github.gabrielmsouza.catalogo.infrastructure.castmember;
 
 import io.github.gabrielmsouza.catalogo.AbstractElasticsearchTest;
 import io.github.gabrielmsouza.catalogo.domain.Fixture;
+import io.github.gabrielmsouza.catalogo.domain.castmember.CastMember;
 import io.github.gabrielmsouza.catalogo.domain.castmember.CastMemberSearchQuery;
-import io.github.gabrielmsouza.catalogo.domain.category.CategorySearchQuery;
 import io.github.gabrielmsouza.catalogo.infrastructure.castmember.persistence.CastMemberDocument;
 import io.github.gabrielmsouza.catalogo.infrastructure.castmember.persistence.CastMemberRepository;
-import io.github.gabrielmsouza.catalogo.infrastructure.category.persistence.CategoryDocument;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.List;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -255,6 +257,53 @@ class CastMemberElasticsearchGatewayTest extends AbstractElasticsearchTest {
         if (StringUtils.isNotEmpty(expectedName)) {
             assertEquals(expectedName, actualOutput.data().get(0).name());
         }
+    }
+
+    @Test
+    public void givenValidIds_whenCallsFindAllById_shouldReturnElements() {
+        // given
+        final var actor = this.repository.save(CastMemberDocument.from(Fixture.CastMembers.actor()));
+        this.repository.save(CastMemberDocument.from(Fixture.CastMembers.director()));
+
+        final var unknown = this.repository.save(CastMemberDocument.from(Fixture.CastMembers.unknown()));
+
+        final var expectedSize = 2;
+        final var expectedIds = Set.of(actor.id(), unknown.id());
+
+        // when
+        final var actualOutput = this.gateway.findAllById(expectedIds);
+
+        // then
+        assertEquals(expectedSize, actualOutput.size());
+
+        final var actualIds = actualOutput.stream().map(CastMember::id).toList();
+        assertTrue(expectedIds.containsAll(actualIds));
+    }
+
+    @Test
+    public void givenNullIds_whenCallsFindAllById_shouldReturnEmpty() {
+        // given
+        final var expectedItems = List.of();
+        final Set<String> expectedIds = null;
+
+        // when
+        final var actualOutput = this.gateway.findAllById(expectedIds);
+
+        // then
+        assertEquals(expectedItems, actualOutput);
+    }
+
+    @Test
+    public void givenEmptyIds_whenCallsFindAllById_shouldReturnEmpty() {
+        // given
+        final var expectedItems = List.of();
+        final Set<String> expectedIds = Set.of();
+
+        // when
+        final var actualOutput = this.gateway.findAllById(expectedIds);
+
+        // then
+        assertEquals(expectedItems, actualOutput);
     }
 
     private void mockCategories() {

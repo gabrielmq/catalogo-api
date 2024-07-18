@@ -11,6 +11,8 @@ import io.github.gabrielmsouza.catalogo.domain.category.Category;
 import io.github.gabrielmsouza.catalogo.domain.pagination.Pagination;
 import io.github.gabrielmsouza.catalogo.domain.utils.IDUtils;
 import io.github.gabrielmsouza.catalogo.domain.utils.InstantUtils;
+import io.github.gabrielmsouza.catalogo.infrastructure.castmember.CastMemberGQLPresenter;
+import io.github.gabrielmsouza.catalogo.infrastructure.castmember.models.CastMemberGQL;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,10 +42,12 @@ public class CastMemberGraphQLControllerTest {
     @Test
     void givenDefaultArguments_whenCallsListCastMembers_thenShouldReturn() {
         // given
-        final var expectedCastMembers = List.of(
+        final var castMembers  = List.of(
                 ListCastMemberUseCase.Output.from(Fixture.CastMembers.actor()),
                 ListCastMemberUseCase.Output.from(Fixture.CastMembers.director())
         );
+
+        final var expectedMembers = castMembers.stream().map(CastMemberGQLPresenter::present).toList();
 
         final var expectedPage = 0;
         final var expectedPerPage = 10;
@@ -54,8 +58,8 @@ public class CastMemberGraphQLControllerTest {
         final var pagination = new Pagination<>(
                 expectedPage,
                 expectedPerPage,
-                expectedCastMembers.size(),
-                expectedCastMembers
+                castMembers.size(),
+                castMembers
         );
 
         when(this.listCastMemberUseCase.execute(any())).thenReturn(pagination);
@@ -73,15 +77,15 @@ public class CastMemberGraphQLControllerTest {
                 """;
 
         // when
-        final var actualCastMember = this.graphql.document(query).execute()
-                .path("castMembers")
-                .entityList(ListCastMemberUseCase.Output.class)
+        final var res = this.graphql.document(query).execute();
+        final var actualCastMember = res.path("castMembers")
+                .entityList(CastMemberGQL.class)
                 .get();
 
         // then
         assertTrue(
-                actualCastMember.size() == expectedCastMembers.size()
-                        && actualCastMember.containsAll(expectedCastMembers)
+                actualCastMember.size() == expectedMembers.size()
+                        && actualCastMember.containsAll(expectedMembers)
         );
 
         final var captor = ArgumentCaptor.forClass(CastMemberSearchQuery.class);
@@ -98,10 +102,12 @@ public class CastMemberGraphQLControllerTest {
     @Test
     void givenCustomArguments_whenCallsListCastMembers_thenShouldReturn() {
         // given
-        final var expectedCastMembers = List.of(
+        final var castMembers  = List.of(
                 ListCastMemberUseCase.Output.from(Fixture.CastMembers.actor()),
                 ListCastMemberUseCase.Output.from(Fixture.CastMembers.director())
         );
+
+        final var expectedMembers = castMembers.stream().map(CastMemberGQLPresenter::present).toList();
 
         final var expectedPage = 2;
         final var expectedPerPage = 15;
@@ -112,8 +118,8 @@ public class CastMemberGraphQLControllerTest {
         final var pagination = new Pagination<>(
                 expectedPage,
                 expectedPerPage,
-                expectedCastMembers.size(),
-                expectedCastMembers
+                castMembers.size(),
+                castMembers
         );
 
         when(this.listCastMemberUseCase.execute(any())).thenReturn(pagination);
@@ -131,21 +137,22 @@ public class CastMemberGraphQLControllerTest {
                 """;
 
         // when
-        final var actualCastMember = this.graphql.document(query)
+        final var res = this.graphql.document(query)
                 .variable("search", expectedSearch)
                 .variable("page", expectedPage)
                 .variable("perPage", expectedPerPage)
                 .variable("sort", expectedSort)
                 .variable("direction", expectedDirection)
-                .execute()
-                .path("castMembers")
-                .entityList(ListCastMemberUseCase.Output.class)
+                .execute();
+
+        final var actualCastMember = res.path("castMembers")
+                .entityList(CastMemberGQL.class)
                 .get();
 
         // then
         assertTrue(
-                actualCastMember.size() == expectedCastMembers.size()
-                        && actualCastMember.containsAll(expectedCastMembers)
+                actualCastMember.size() == expectedMembers.size()
+                        && actualCastMember.containsAll(expectedMembers)
         );
 
         final var captor = ArgumentCaptor.forClass(CastMemberSearchQuery.class);

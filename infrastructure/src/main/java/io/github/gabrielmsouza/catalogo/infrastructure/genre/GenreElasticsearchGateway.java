@@ -7,6 +7,7 @@ import io.github.gabrielmsouza.catalogo.domain.pagination.Pagination;
 import io.github.gabrielmsouza.catalogo.infrastructure.genre.persistence.GenreDocument;
 import io.github.gabrielmsouza.catalogo.infrastructure.genre.persistence.GenreRepository;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.context.annotation.Profile;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
@@ -18,11 +19,14 @@ import org.springframework.data.elasticsearch.core.query.Query;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.StreamSupport;
 
 @Component
+@Profile("!dev")
 public class GenreElasticsearchGateway implements GenreGateway {
     private static final String NAME_PROP = "name";
     private static final String KEYWORD = ".keyword";
@@ -77,6 +81,16 @@ public class GenreElasticsearchGateway implements GenreGateway {
                 .toList();
 
         return new Pagination<>(currentPage, itemsPerPage, total, genres);
+    }
+
+    @Override
+    public List<Genre> findAllById(final Set<String> ids) {
+        if (ids == null || ids.isEmpty()) {
+            return List.of();
+        }
+        return StreamSupport.stream(this.repository.findAllById(ids).spliterator(), false)
+                .map(GenreDocument::toGenre)
+                .toList();
     }
 
     private static Criteria createCriteria(final GenreSearchQuery aQuery) {

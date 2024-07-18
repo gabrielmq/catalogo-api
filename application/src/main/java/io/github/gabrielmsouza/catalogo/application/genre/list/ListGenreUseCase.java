@@ -48,7 +48,8 @@ public class ListGenreUseCase extends UseCase<ListGenreUseCase.Input, Pagination
             boolean active,
             Set<String> categories,
             Instant createdAt,
-            Instant updatedAt
+            Instant updatedAt,
+            Instant deletedAt
     ) {
         public static Output from(final Genre genre) {
             return new Output(
@@ -57,7 +58,8 @@ public class ListGenreUseCase extends UseCase<ListGenreUseCase.Input, Pagination
                     genre.active(),
                     genre.categories(),
                     genre.createdAt(),
-                    genre.updatedAt()
+                    genre.updatedAt(),
+                    genre.deletedAt()
             );
         }
     }

@@ -21,10 +21,11 @@ public class ListCategoryUseCase extends UseCase<CategorySearchQuery, Pagination
 
     public record Output(
             String id,
-            String name
+            String name,
+            String description
     ) {
         public static Output from(final Category aCategory) {
-            return new Output(aCategory.id(), aCategory.name());
+            return new Output(aCategory.id(), aCategory.name(), aCategory.description());
         }
     }
 }

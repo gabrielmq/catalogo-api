@@ -7,6 +7,7 @@ import io.github.gabrielmsouza.catalogo.domain.pagination.Pagination;
 import io.github.gabrielmsouza.catalogo.infrastructure.castmember.persistence.CastMemberDocument;
 import io.github.gabrielmsouza.catalogo.infrastructure.castmember.persistence.CastMemberRepository;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.context.annotation.Profile;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.elasticsearch.core.SearchHit;
@@ -15,12 +16,16 @@ import org.springframework.data.elasticsearch.core.query.CriteriaQuery;
 import org.springframework.data.elasticsearch.core.query.Query;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.StreamSupport;
 
 import static org.springframework.data.elasticsearch.core.query.Criteria.where;
 
 @Component
+@Profile("!dev")
 public class CastMemberElasticsearchGateway implements CastMemberGateway {
     private static final String NAME_PROP = "name";
     private static final String KEYWORD = ".keyword";
@@ -73,6 +78,16 @@ public class CastMemberElasticsearchGateway implements CastMemberGateway {
                 .toList();
 
         return new Pagination<>(currentPage, perPage, total, members);
+    }
+
+    @Override
+    public List<CastMember> findAllById(final Set<String> ids) {
+        if (ids == null || ids.isEmpty()) {
+            return List.of();
+        }
+        return StreamSupport.stream(this.repository.findAllById(ids).spliterator(), false)
+                .map(CastMemberDocument::toCastMember)
+                .toList();
     }
 
     private String buildSort(final String sort) {
