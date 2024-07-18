@@ -11,7 +11,6 @@ elasticsearch:
 
 kafka:
   bootstrap-servers: localhost:9092
-  pool-timeout: 60_000
 
 rest-client:
   base-url: "http://localhost:8080"

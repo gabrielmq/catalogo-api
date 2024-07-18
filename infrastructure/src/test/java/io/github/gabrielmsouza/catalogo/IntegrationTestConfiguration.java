@@ -1,5 +1,6 @@
 package io.github.gabrielmsouza.catalogo;
 
+import io.github.gabrielmsouza.catalogo.infrastructure.WebGraphQlSecurityInterceptor;
 import io.github.gabrielmsouza.catalogo.infrastructure.castmember.persistence.CastMemberRepository;
 import io.github.gabrielmsouza.catalogo.infrastructure.category.persistence.CategoryRepository;
 import io.github.gabrielmsouza.catalogo.infrastructure.genre.persistence.GenreRepository;
@@ -29,5 +30,10 @@ public class IntegrationTestConfiguration {
     @Bean
     VideoRepository videoRepository() {
         return mock(VideoRepository.class);
+    }
+
+    @Bean
+    public WebGraphQlSecurityInterceptor webGraphQlSecurityInterceptor() {
+        return new WebGraphQlSecurityInterceptor();
     }
 }
