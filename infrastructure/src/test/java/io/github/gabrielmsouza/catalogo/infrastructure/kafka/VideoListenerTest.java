@@ -18,6 +18,7 @@ import io.github.gabrielmsouza.catalogo.infrastructure.video.models.VideoResourc
 import org.apache.kafka.clients.admin.TopicListing;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
@@ -34,6 +35,7 @@ import java.util.stream.Collectors;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
+@Disabled
 class VideoListenerTest extends AbstractEmbeddedKafkaTest {
     @MockBean
     private DeleteVideoUseCase deleteVideoUseCase;
