@@ -182,11 +182,11 @@ class GenreListenerTest extends AbstractEmbeddedKafkaTest {
         final var expectedMaxAttempts = 4;
         final var expectedMaxDLTAttempts = 1;
 
-        final var aulas = Fixture.Categories.aulas();
-        final var aulasEvent = new CategoryEvent(aulas.id());
+        final var marketing = Fixture.Genres.marketing();
+        final var marketingEvent = new CategoryEvent(marketing.id());
 
         final var message =
-                Json.writeValueAsString(new MessageValue<>(new ValuePayload<>(aulasEvent, aulasEvent, aSource(), Operation.DELETE)));
+                Json.writeValueAsString(new MessageValue<>(new ValuePayload<>(marketingEvent, marketingEvent, aSource(), Operation.DELETE)));
 
         final var latch = new CountDownLatch(5);
         doAnswer(t -> {
